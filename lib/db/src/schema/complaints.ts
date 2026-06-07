@@ -6,11 +6,13 @@ export const complaintsTable = pgTable("complaints", {
   id: serial("id").primaryKey(),
   complaintId: text("complaint_id").notNull().unique(),
   name: text("name").notNull(),
+  email: text("email"),
   mobile: text("mobile").notNull(),
   area: text("area").notNull(),
   category: text("category").notNull(),
   description: text("description").notNull(),
   status: text("status").notNull().default("Pending"),
+  priority: text("priority").notNull().default("Medium"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 

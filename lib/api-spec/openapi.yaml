@@ -45,6 +45,11 @@ paths:
           in: query
           schema:
             type: string
+        - name: priority
+          in: query
+          schema:
+            type: string
+            enum: [Low, Medium, High, Urgent]
         - name: area
           in: query
           schema:
@@ -346,13 +351,15 @@ components:
 
     Complaint:
       type: object
-      required: [id, complaintId, name, mobile, area, category, description, status, createdAt]
+      required: [id, complaintId, name, mobile, area, category, description, status, priority, createdAt]
       properties:
         id:
           type: integer
         complaintId:
           type: string
         name:
+          type: string
+        email:
           type: string
         mobile:
           type: string
@@ -365,17 +372,23 @@ components:
         status:
           type: string
           enum: [Pending, "In Progress", Resolved]
+        priority:
+          type: string
+          enum: [Low, Medium, High, Urgent]
         createdAt:
           type: string
           format: date-time
 
     ComplaintInput:
       type: object
-      required: [name, mobile, area, category, description]
+      required: [name, mobile, area, category, description, priority]
       properties:
         name:
           type: string
           minLength: 2
+        email:
+          type: string
+          format: email
         mobile:
           type: string
           minLength: 10
@@ -397,6 +410,9 @@ components:
         description:
           type: string
           minLength: 10
+        priority:
+          type: string
+          enum: [Low, Medium, High, Urgent]
 
     ComplaintUpdate:
       type: object

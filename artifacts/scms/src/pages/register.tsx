@@ -15,22 +15,31 @@ const CATEGORIES = [
   "Street Light", "Sanitation", "Garbage Collection", "Public Property Damage", "Other",
 ];
 
+const PRIORITIES = [
+  { value: "Low", label: "Low", color: "text-slate-600" },
+  { value: "Medium", label: "Medium", color: "text-amber-600" },
+  { value: "High", label: "High", color: "text-orange-600" },
+  { value: "Urgent", label: "Urgent", color: "text-red-600" },
+];
+
 export default function Register() {
   const { toast } = useToast();
   const createComplaint = useCreateComplaint();
   const [submitted, setSubmitted] = useState<{ id: number; complaintId: string } | null>(null);
 
   const [form, setForm] = useState({
-    name: "", mobile: "", area: "", category: "", description: "",
+    name: "", email: "", mobile: "", area: "", category: "", priority: "Medium", description: "",
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   function validate() {
     const e: Record<string, string> = {};
     if (form.name.trim().length < 2) e.name = "Name must be at least 2 characters";
+    if (form.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) e.email = "Enter a valid email address";
     if (!/^\d{10}$/.test(form.mobile)) e.mobile = "Mobile must be 10 digits";
     if (form.area.trim().length < 2) e.area = "Area is required";
     if (!form.category) e.category = "Select a category";
+    if (!form.priority) e.priority = "Select a priority";
     if (form.description.trim().length < 10) e.description = "Description must be at least 10 characters";
     setErrors(e);
     return Object.keys(e).length === 0;
@@ -40,7 +49,17 @@ export default function Register() {
     e.preventDefault();
     if (!validate()) return;
     createComplaint.mutate(
-      { data: { name: form.name, mobile: form.mobile, area: form.area, category: form.category, description: form.description } },
+      {
+        data: {
+          name: form.name,
+          email: form.email || undefined,
+          mobile: form.mobile,
+          area: form.area,
+          category: form.category as "Water Supply" | "Electricity" | "Road Damage" | "Drainage" | "Street Light" | "Sanitation" | "Garbage Collection" | "Public Property Damage" | "Other",
+          priority: form.priority as "Low" | "Medium" | "High" | "Urgent",
+          description: form.description,
+        },
+      },
       {
         onSuccess: (data) => { setSubmitted({ id: data.id, complaintId: data.complaintId }); },
         onError: () => { toast({ title: "Error", description: "Failed to submit complaint. Please try again.", variant: "destructive" }); },
@@ -72,7 +91,7 @@ export default function Register() {
                   Download PDF Receipt
                 </Button>
               </a>
-              <Button variant="outline" className="w-full" onClick={() => { setSubmitted(null); setForm({ name: "", mobile: "", area: "", category: "", description: "" }); }}>
+              <Button variant="outline" className="w-full" onClick={() => { setSubmitted(null); setForm({ name: "", email: "", mobile: "", area: "", category: "", priority: "Medium", description: "" }); }}>
                 Register Another Complaint
               </Button>
             </div>
@@ -104,6 +123,12 @@ export default function Register() {
             </div>
 
             <div className="space-y-1.5">
+              <Label htmlFor="email">Email Address <span className="text-slate-400 text-xs font-normal">(optional — for status notifications)</span></Label>
+              <Input id="email" type="email" placeholder="you@example.com" value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} className={errors.email ? "border-destructive" : ""} />
+              {errors.email && <p className="text-xs text-destructive">{errors.email}</p>}
+            </div>
+
+            <div className="space-y-1.5">
               <Label htmlFor="mobile">Mobile Number</Label>
               <Input id="mobile" placeholder="10-digit mobile number" value={form.mobile} onChange={e => setForm(f => ({ ...f, mobile: e.target.value.replace(/\D/g, "").slice(0, 10) }))} className={errors.mobile ? "border-destructive" : ""} />
               {errors.mobile && <p className="text-xs text-destructive">{errors.mobile}</p>}
@@ -115,17 +140,36 @@ export default function Register() {
               {errors.area && <p className="text-xs text-destructive">{errors.area}</p>}
             </div>
 
-            <div className="space-y-1.5">
-              <Label>Category</Label>
-              <Select value={form.category} onValueChange={v => setForm(f => ({ ...f, category: v }))}>
-                <SelectTrigger className={errors.category ? "border-destructive" : ""}>
-                  <SelectValue placeholder="Select complaint category" />
-                </SelectTrigger>
-                <SelectContent>
-                  {CATEGORIES.map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)}
-                </SelectContent>
-              </Select>
-              {errors.category && <p className="text-xs text-destructive">{errors.category}</p>}
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-1.5">
+                <Label>Category</Label>
+                <Select value={form.category} onValueChange={v => setForm(f => ({ ...f, category: v }))}>
+                  <SelectTrigger className={errors.category ? "border-destructive" : ""}>
+                    <SelectValue placeholder="Select category" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {CATEGORIES.map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)}
+                  </SelectContent>
+                </Select>
+                {errors.category && <p className="text-xs text-destructive">{errors.category}</p>}
+              </div>
+
+              <div className="space-y-1.5">
+                <Label>Priority</Label>
+                <Select value={form.priority} onValueChange={v => setForm(f => ({ ...f, priority: v }))}>
+                  <SelectTrigger className={errors.priority ? "border-destructive" : ""}>
+                    <SelectValue placeholder="Select priority" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {PRIORITIES.map(p => (
+                      <SelectItem key={p.value} value={p.value}>
+                        <span className={p.color}>{p.label}</span>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                {errors.priority && <p className="text-xs text-destructive">{errors.priority}</p>}
+              </div>
             </div>
 
             <div className="space-y-1.5">

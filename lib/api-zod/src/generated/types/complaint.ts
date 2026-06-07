@@ -5,16 +5,19 @@
  * Smart Civic Complaint Management System API
  * OpenAPI spec version: 0.1.0
  */
+import type { ComplaintPriority } from './complaintPriority';
 import type { ComplaintStatus } from './complaintStatus';
 
 export interface Complaint {
   id: number;
   complaintId: string;
   name: string;
+  email?: string;
   mobile: string;
   area: string;
   category: string;
   description: string;
   status: ComplaintStatus;
+  priority: ComplaintPriority;
   createdAt: Date;
 }

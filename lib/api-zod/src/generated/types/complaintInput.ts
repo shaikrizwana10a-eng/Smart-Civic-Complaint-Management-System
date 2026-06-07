@@ -6,10 +6,12 @@
  * OpenAPI spec version: 0.1.0
  */
 import type { ComplaintInputCategory } from './complaintInputCategory';
+import type { ComplaintInputPriority } from './complaintInputPriority';
 
 export interface ComplaintInput {
   /** @minLength 2 */
   name: string;
+  email?: string;
   /** @minLength 10 */
   mobile: string;
   /** @minLength 2 */
@@ -17,4 +19,5 @@ export interface ComplaintInput {
   category: ComplaintInputCategory;
   /** @minLength 10 */
   description: string;
+  priority: ComplaintInputPriority;
 }

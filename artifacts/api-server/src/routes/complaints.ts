@@ -12,6 +12,7 @@ import {
   TrackComplaintParams,
 } from "@workspace/api-zod";
 import { generateComplaintPdf } from "../lib/pdf";
+import { sendStatusNotification } from "../lib/mailer";
 
 const router: IRouter = Router();
 
@@ -36,11 +37,12 @@ router.get("/complaints", async (req, res): Promise<void> => {
     return;
   }
 
-  const { status, category, area, search } = parsed.data;
+  const { status, category, priority, area, search } = parsed.data;
 
   const conditions = [];
   if (status) conditions.push(eq(complaintsTable.status, status));
   if (category) conditions.push(eq(complaintsTable.category, category));
+  if (priority) conditions.push(eq(complaintsTable.priority, priority));
   if (area) conditions.push(like(complaintsTable.area, `%${area}%`));
   if (search) {
     conditions.push(
@@ -141,6 +143,11 @@ router.patch("/complaints/:id", async (req, res): Promise<void> => {
   if (!complaint) {
     res.status(404).json({ error: "Complaint not found" });
     return;
+  }
+
+  // Send email notification if complaint has an email and status changed
+  if (complaint.email && parsed.data.status) {
+    await sendStatusNotification(complaint.email, complaint.complaintId, parsed.data.status);
   }
 
   res.json(complaint);

@@ -18,15 +18,27 @@ export const ComplaintStatus = {
   Resolved: 'Resolved',
 } as const;
 
+export type ComplaintPriority = typeof ComplaintPriority[keyof typeof ComplaintPriority];
+
+
+export const ComplaintPriority = {
+  Low: 'Low',
+  Medium: 'Medium',
+  High: 'High',
+  Urgent: 'Urgent',
+} as const;
+
 export interface Complaint {
   id: number;
   complaintId: string;
   name: string;
+  email?: string;
   mobile: string;
   area: string;
   category: string;
   description: string;
   status: ComplaintStatus;
+  priority: ComplaintPriority;
   createdAt: string;
 }
 
@@ -45,9 +57,20 @@ export const ComplaintInputCategory = {
   Other: 'Other',
 } as const;
 
+export type ComplaintInputPriority = typeof ComplaintInputPriority[keyof typeof ComplaintInputPriority];
+
+
+export const ComplaintInputPriority = {
+  Low: 'Low',
+  Medium: 'Medium',
+  High: 'High',
+  Urgent: 'Urgent',
+} as const;
+
 export interface ComplaintInput {
   /** @minLength 2 */
   name: string;
+  email?: string;
   /** @minLength 10 */
   mobile: string;
   /** @minLength 2 */
@@ -55,6 +78,7 @@ export interface ComplaintInput {
   category: ComplaintInputCategory;
   /** @minLength 10 */
   description: string;
+  priority: ComplaintInputPriority;
 }
 
 export type ComplaintUpdateStatus = typeof ComplaintUpdateStatus[keyof typeof ComplaintUpdateStatus];
@@ -113,6 +137,7 @@ export interface SuccessResponse {
 export type ListComplaintsParams = {
 status?: ListComplaintsStatus;
 category?: string;
+priority?: ListComplaintsPriority;
 area?: string;
 search?: string;
 };
@@ -124,5 +149,15 @@ export const ListComplaintsStatus = {
   Pending: 'Pending',
   In_Progress: 'In Progress',
   Resolved: 'Resolved',
+} as const;
+
+export type ListComplaintsPriority = typeof ListComplaintsPriority[keyof typeof ListComplaintsPriority];
+
+
+export const ListComplaintsPriority = {
+  Low: 'Low',
+  Medium: 'Medium',
+  High: 'High',
+  Urgent: 'Urgent',
 } as const;
 

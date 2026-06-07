@@ -1,0 +1,3 @@
+- [Bcrypt admin auth](bcrypt-admin-auth.md) — admin password uses bcrypt; default hash of "admin123" hardcoded; override with ADMIN_PASSWORD_HASH env var.
+- [Email notifications](email-notifications.md) — nodemailer with graceful skip when SMTP env vars absent; fires on PATCH /complaints/:id status change.
+- [Priority + email DB columns](priority-email-columns.md) — both added to complaintsTable; email is nullable (existing rows); priority defaults to "Medium".

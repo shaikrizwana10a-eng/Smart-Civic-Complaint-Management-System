@@ -23,6 +23,7 @@ export const HealthCheckResponse = zod.object({
 export const ListComplaintsQueryParams = zod.object({
   "status": zod.enum(['Pending', 'In Progress', 'Resolved']).optional(),
   "category": zod.coerce.string().optional(),
+  "priority": zod.enum(['Low', 'Medium', 'High', 'Urgent']).optional(),
   "area": zod.coerce.string().optional(),
   "search": zod.coerce.string().optional()
 })
@@ -31,11 +32,13 @@ export const ListComplaintsResponseItem = zod.object({
   "id": zod.number(),
   "complaintId": zod.string(),
   "name": zod.string(),
+  "email": zod.string().optional(),
   "mobile": zod.string(),
   "area": zod.string(),
   "category": zod.string(),
   "description": zod.string(),
   "status": zod.enum(['Pending', 'In Progress', 'Resolved']),
+  "priority": zod.enum(['Low', 'Medium', 'High', 'Urgent']),
   "createdAt": zod.coerce.date()
 })
 export const ListComplaintsResponse = zod.array(ListComplaintsResponseItem)
@@ -56,10 +59,12 @@ export const createComplaintBodyDescriptionMin = 10;
 
 export const CreateComplaintBody = zod.object({
   "name": zod.string().min(createComplaintBodyNameMin),
+  "email": zod.string().email().optional(),
   "mobile": zod.string().min(createComplaintBodyMobileMin),
   "area": zod.string().min(createComplaintBodyAreaMin),
   "category": zod.enum(['Water Supply', 'Electricity', 'Road Damage', 'Drainage', 'Street Light', 'Sanitation', 'Garbage Collection', 'Public Property Damage', 'Other']),
-  "description": zod.string().min(createComplaintBodyDescriptionMin)
+  "description": zod.string().min(createComplaintBodyDescriptionMin),
+  "priority": zod.enum(['Low', 'Medium', 'High', 'Urgent'])
 })
 
 
@@ -74,11 +79,13 @@ export const TrackComplaintResponse = zod.object({
   "id": zod.number(),
   "complaintId": zod.string(),
   "name": zod.string(),
+  "email": zod.string().optional(),
   "mobile": zod.string(),
   "area": zod.string(),
   "category": zod.string(),
   "description": zod.string(),
   "status": zod.enum(['Pending', 'In Progress', 'Resolved']),
+  "priority": zod.enum(['Low', 'Medium', 'High', 'Urgent']),
   "createdAt": zod.coerce.date()
 })
 
@@ -94,11 +101,13 @@ export const GetComplaintResponse = zod.object({
   "id": zod.number(),
   "complaintId": zod.string(),
   "name": zod.string(),
+  "email": zod.string().optional(),
   "mobile": zod.string(),
   "area": zod.string(),
   "category": zod.string(),
   "description": zod.string(),
   "status": zod.enum(['Pending', 'In Progress', 'Resolved']),
+  "priority": zod.enum(['Low', 'Medium', 'High', 'Urgent']),
   "createdAt": zod.coerce.date()
 })
 
@@ -118,11 +127,13 @@ export const UpdateComplaintResponse = zod.object({
   "id": zod.number(),
   "complaintId": zod.string(),
   "name": zod.string(),
+  "email": zod.string().optional(),
   "mobile": zod.string(),
   "area": zod.string(),
   "category": zod.string(),
   "description": zod.string(),
   "status": zod.enum(['Pending', 'In Progress', 'Resolved']),
+  "priority": zod.enum(['Low', 'Medium', 'High', 'Urgent']),
   "createdAt": zod.coerce.date()
 })
 
@@ -222,11 +233,13 @@ export const GetRecentComplaintsResponseItem = zod.object({
   "id": zod.number(),
   "complaintId": zod.string(),
   "name": zod.string(),
+  "email": zod.string().optional(),
   "mobile": zod.string(),
   "area": zod.string(),
   "category": zod.string(),
   "description": zod.string(),
   "status": zod.enum(['Pending', 'In Progress', 'Resolved']),
+  "priority": zod.enum(['Low', 'Medium', 'High', 'Urgent']),
   "createdAt": zod.coerce.date()
 })
 export const GetRecentComplaintsResponse = zod.array(GetRecentComplaintsResponseItem)

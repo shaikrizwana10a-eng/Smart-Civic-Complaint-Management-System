@@ -1,8 +1,13 @@
 import { Router, type IRouter } from "express";
+import bcrypt from "bcryptjs";
 import { AdminLoginBody } from "@workspace/api-zod";
 
-const ADMIN_USERNAME = "admin";
-const ADMIN_PASSWORD = "admin123";
+const ADMIN_USERNAME = process.env.ADMIN_USERNAME ?? "admin";
+// Default: bcrypt hash of "admin123". Override with ADMIN_PASSWORD_HASH env var.
+const ADMIN_PASSWORD_HASH =
+  process.env.ADMIN_PASSWORD_HASH ??
+  "$2b$10$h7Uu.fPsFo9L9XGug8Hf/.X7gckDZDCcFuVsfYH9BAo8LJItnOo7C";
+
 const SESSION_COOKIE = "scms_admin";
 
 const router: IRouter = Router();
@@ -15,7 +20,14 @@ router.post("/admin/login", async (req, res): Promise<void> => {
   }
 
   const { username, password } = parsed.data;
-  if (username !== ADMIN_USERNAME || password !== ADMIN_PASSWORD) {
+
+  if (username !== ADMIN_USERNAME) {
+    res.status(401).json({ error: "Invalid credentials" });
+    return;
+  }
+
+  const valid = await bcrypt.compare(password, ADMIN_PASSWORD_HASH);
+  if (!valid) {
     res.status(401).json({ error: "Invalid credentials" });
     return;
   }

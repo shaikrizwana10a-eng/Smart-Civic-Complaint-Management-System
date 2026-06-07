@@ -5,11 +5,13 @@
  * Smart Civic Complaint Management System API
  * OpenAPI spec version: 0.1.0
  */
+import type { ListComplaintsPriority } from './listComplaintsPriority';
 import type { ListComplaintsStatus } from './listComplaintsStatus';
 
 export type ListComplaintsParams = {
 status?: ListComplaintsStatus;
 category?: string;
+priority?: ListComplaintsPriority;
 area?: string;
 search?: string;
 };
