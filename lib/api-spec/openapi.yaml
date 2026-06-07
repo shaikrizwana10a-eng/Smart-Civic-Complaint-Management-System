@@ -1,15 +1,20 @@
 openapi: 3.1.0
 info:
-  # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: Smart Civic Complaint Management System API
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: complaints
+    description: Complaint operations
+  - name: admin
+    description: Admin operations
+  - name: analytics
+    description: Analytics operations
 paths:
   /healthz:
     get:
@@ -24,6 +29,311 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  /complaints:
+    get:
+      operationId: listComplaints
+      tags: [complaints]
+      summary: List all complaints
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [Pending, "In Progress", Resolved]
+        - name: category
+          in: query
+          schema:
+            type: string
+        - name: area
+          in: query
+          schema:
+            type: string
+        - name: search
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of complaints
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Complaint"
+    post:
+      operationId: createComplaint
+      tags: [complaints]
+      summary: Register a new complaint
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ComplaintInput"
+      responses:
+        "201":
+          description: Complaint created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Complaint"
+        "400":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /complaints/track/{complaintId}:
+    get:
+      operationId: trackComplaint
+      tags: [complaints]
+      summary: Track a complaint by complaint ID (e.g. SCMS2026001)
+      parameters:
+        - name: complaintId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Complaint found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Complaint"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /complaints/{id}:
+    get:
+      operationId: getComplaint
+      tags: [complaints]
+      summary: Get complaint by internal ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Complaint
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Complaint"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    patch:
+      operationId: updateComplaint
+      tags: [complaints]
+      summary: Update complaint status (admin only)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ComplaintUpdate"
+      responses:
+        "200":
+          description: Updated complaint
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Complaint"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    delete:
+      operationId: deleteComplaint
+      tags: [complaints]
+      summary: Delete a complaint (admin only)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /complaints/{id}/pdf:
+    get:
+      operationId: downloadComplaintPdf
+      tags: [complaints]
+      summary: Download complaint PDF slip
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: PDF file
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+
+  /admin/login:
+    post:
+      operationId: adminLogin
+      tags: [admin]
+      summary: Admin login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AdminCredentials"
+      responses:
+        "200":
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdminSession"
+        "401":
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /admin/logout:
+    post:
+      operationId: adminLogout
+      tags: [admin]
+      summary: Admin logout
+      responses:
+        "200":
+          description: Logged out
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+
+  /admin/me:
+    get:
+      operationId: getAdminSession
+      tags: [admin]
+      summary: Get current admin session
+      responses:
+        "200":
+          description: Session info
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdminSession"
+        "401":
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /analytics/stats:
+    get:
+      operationId: getStats
+      tags: [analytics]
+      summary: Get overall complaint statistics
+      responses:
+        "200":
+          description: Stats
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ComplaintStats"
+
+  /analytics/by-category:
+    get:
+      operationId: getStatsByCategory
+      tags: [analytics]
+      summary: Get complaint counts grouped by category
+      responses:
+        "200":
+          description: Category breakdown
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/CategoryCount"
+
+  /analytics/by-status:
+    get:
+      operationId: getStatsByStatus
+      tags: [analytics]
+      summary: Get complaint counts grouped by status
+      responses:
+        "200":
+          description: Status breakdown
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/StatusCount"
+
+  /analytics/monthly-trend:
+    get:
+      operationId: getMonthlyTrend
+      tags: [analytics]
+      summary: Get monthly complaint trend for the past 12 months
+      responses:
+        "200":
+          description: Monthly trend
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/MonthlyCount"
+
+  /analytics/recent:
+    get:
+      operationId: getRecentComplaints
+      tags: [analytics]
+      summary: Get recent complaints (last 5)
+      responses:
+        "200":
+          description: Recent complaints
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Complaint"
+
 components:
   schemas:
     HealthStatus:
@@ -34,3 +344,135 @@ components:
       required:
         - status
 
+    Complaint:
+      type: object
+      required: [id, complaintId, name, mobile, area, category, description, status, createdAt]
+      properties:
+        id:
+          type: integer
+        complaintId:
+          type: string
+        name:
+          type: string
+        mobile:
+          type: string
+        area:
+          type: string
+        category:
+          type: string
+        description:
+          type: string
+        status:
+          type: string
+          enum: [Pending, "In Progress", Resolved]
+        createdAt:
+          type: string
+          format: date-time
+
+    ComplaintInput:
+      type: object
+      required: [name, mobile, area, category, description]
+      properties:
+        name:
+          type: string
+          minLength: 2
+        mobile:
+          type: string
+          minLength: 10
+        area:
+          type: string
+          minLength: 2
+        category:
+          type: string
+          enum:
+            - Water Supply
+            - Electricity
+            - Road Damage
+            - Drainage
+            - Street Light
+            - Sanitation
+            - Garbage Collection
+            - Public Property Damage
+            - Other
+        description:
+          type: string
+          minLength: 10
+
+    ComplaintUpdate:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [Pending, "In Progress", Resolved]
+
+    AdminCredentials:
+      type: object
+      required: [username, password]
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+
+    AdminSession:
+      type: object
+      required: [authenticated, username]
+      properties:
+        authenticated:
+          type: boolean
+        username:
+          type: string
+
+    ComplaintStats:
+      type: object
+      required: [total, pending, inProgress, resolved]
+      properties:
+        total:
+          type: integer
+        pending:
+          type: integer
+        inProgress:
+          type: integer
+        resolved:
+          type: integer
+
+    CategoryCount:
+      type: object
+      required: [category, count]
+      properties:
+        category:
+          type: string
+        count:
+          type: integer
+
+    StatusCount:
+      type: object
+      required: [status, count]
+      properties:
+        status:
+          type: string
+        count:
+          type: integer
+
+    MonthlyCount:
+      type: object
+      required: [month, count]
+      properties:
+        month:
+          type: string
+        count:
+          type: integer
+
+    ErrorResponse:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: string
+
+    SuccessResponse:
+      type: object
+      required: [success]
+      properties:
+        success:
+          type: boolean

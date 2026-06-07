@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "Smart Civic Complaint Management System"
+version = "1.0.0"
+id = "artifacts/scms"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 24563
+
+[services.development]
+run = "pnpm --filter @workspace/scms run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/scms", "run", "build" ]
+publicDir = "artifacts/scms/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "24563"
+BASE_PATH = "/"
