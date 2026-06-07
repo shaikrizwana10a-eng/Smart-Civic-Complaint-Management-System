@@ -1,0 +1,8 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "TiwyBWHOP4PjbGIq-Wj4b"
+uri = "file://README.md"
+type = "text"
+title = "SCMS — GitHub README.md"
