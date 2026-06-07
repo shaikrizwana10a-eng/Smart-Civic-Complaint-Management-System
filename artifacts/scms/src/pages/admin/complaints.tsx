@@ -119,7 +119,7 @@ export default function AdminComplaints() {
     if (!deleteTarget) return;
     setIsDeleting(true);
     deleteComplaint.mutate(
-      { params: { id: deleteTarget.id } },
+      { id: deleteTarget.id },
       {
         onSuccess: () => {
           queryClient.invalidateQueries({ queryKey: getListComplaintsQueryKey() });
