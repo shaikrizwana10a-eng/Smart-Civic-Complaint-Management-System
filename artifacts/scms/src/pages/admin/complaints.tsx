@@ -11,7 +11,7 @@ import {
 } from "@workspace/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { motion } from "framer-motion";
-import { Search, Trash2, Loader2, AlertTriangle, Filter } from "lucide-react";
+import { Search, Trash2, Loader2, AlertTriangle, Filter, Download } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -94,6 +94,30 @@ export default function AdminComplaints() {
     );
   }
 
+  function handleExportCSV() {
+    if (!complaints || complaints.length === 0) return;
+    const headers = ["Complaint ID", "Name", "Mobile", "Area", "Category", "Status", "Description", "Date"];
+    const rows = complaints.map(c => [
+      c.complaintId,
+      c.name,
+      c.mobile,
+      c.area,
+      c.category,
+      c.status,
+      `"${c.description.replace(/"/g, '""')}"`,
+      new Date(c.createdAt).toLocaleDateString("en-IN"),
+    ]);
+    const csv = [headers.join(","), ...rows.map(r => r.join(","))].join("\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `complaints-${new Date().toISOString().slice(0, 10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+    toast({ title: "Exported", description: `${complaints.length} complaint${complaints.length !== 1 ? "s" : ""} downloaded as CSV` });
+  }
+
   if (sessionLoading) {
     return <div className="min-h-screen flex items-center justify-center"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>;
   }
@@ -101,9 +125,21 @@ export default function AdminComplaints() {
   return (
     <AdminLayout>
       <div className="p-6 space-y-5 overflow-auto">
-        <div>
-          <h1 className="text-xl font-bold text-slate-900">Complaints</h1>
-          <p className="text-sm text-slate-500">Manage and update all civic complaints</p>
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-xl font-bold text-slate-900">Complaints</h1>
+            <p className="text-sm text-slate-500">Manage and update all civic complaints</p>
+          </div>
+          <Button
+            variant="outline"
+            size="sm"
+            className="gap-2"
+            onClick={handleExportCSV}
+            disabled={!complaints || complaints.length === 0}
+          >
+            <Download className="h-3.5 w-3.5" />
+            Export CSV
+          </Button>
         </div>
 
         {/* Filters */}
