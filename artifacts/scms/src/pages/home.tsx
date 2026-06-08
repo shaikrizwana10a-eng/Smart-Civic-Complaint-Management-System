@@ -25,7 +25,7 @@ export default function Home() {
               transition={{ duration: 0.5 }}
               className="text-4xl md:text-6xl font-bold tracking-tight text-slate-900 max-w-3xl"
             >
-              Civic Issue Resolution, <span className="text-primary">Streamlined.</span>
+              Smart Civic Complaint Management System
             </motion.h1>
             <motion.p 
               initial={{ opacity: 0, y: 20 }}
@@ -33,8 +33,7 @@ export default function Home() {
               transition={{ duration: 0.5, delay: 0.1 }}
               className="mt-6 text-lg md:text-xl text-slate-600 max-w-2xl"
             >
-              Report neighborhood issues instantly. Track progress transparently. 
-              Help us build a better city together through accountable civic action.
+              Register, track, and resolve civic complaints through a transparent digital platform.
             </motion.p>
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
