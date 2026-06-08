@@ -390,3 +390,36 @@ pnpm run build
 [![Built with React](https://img.shields.io/badge/Built%20with-React-61DAFB?style=flat-square&logo=react&logoColor=black)](https://react.dev/)
 
 </div>
+
+
+---
+
+# 📸 Screenshots
+
+## 🏠 Home Page
+
+![Home Page](home_page.png)
+
+## 📝 Register Complaint
+
+![Register Complaint](register_complaint.png)
+
+## ✅ Complaint Registered
+
+![Complaint Registered](complaint_registered.png)
+
+## 🔍 Track Complaint
+
+![Track Complaint](track_complaint.png)
+
+## 🔐 Admin Login
+
+![Admin Login](admin_login.png)
+
+## 📊 Admin Dashboard
+
+![Admin Dashboard](admin_dashboard.png)
+
+## 📋 Complaint Management
+
+![Complaint Management](admin_complaints.png)
