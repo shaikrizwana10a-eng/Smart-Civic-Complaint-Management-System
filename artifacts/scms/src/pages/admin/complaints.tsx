@@ -104,7 +104,7 @@ export default function AdminComplaints() {
 
   function handleStatusChange(id: number, status: string) {
     updateComplaint.mutate(
-      { params: { id }, data: { status: status as "Pending" | "In Progress" | "Resolved" } },
+      { id, data: { status: status as "Pending" | "In Progress" | "Resolved" } },
       {
         onSuccess: () => {
           queryClient.invalidateQueries({ queryKey: getListComplaintsQueryKey() });
