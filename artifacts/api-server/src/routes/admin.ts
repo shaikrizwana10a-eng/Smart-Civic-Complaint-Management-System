@@ -32,10 +32,12 @@ router.post("/admin/login", async (req, res): Promise<void> => {
     return;
   }
 
+  const isProduction = process.env.NODE_ENV === "production";
   res.cookie(SESSION_COOKIE, "authenticated", {
     httpOnly: true,
     maxAge: 24 * 60 * 60 * 1000,
-    sameSite: "lax",
+    sameSite: isProduction ? "none" : "lax",
+    secure: isProduction,
   });
   res.json({ authenticated: true, username: ADMIN_USERNAME });
 });

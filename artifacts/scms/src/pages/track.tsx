@@ -2,7 +2,7 @@ import { useState } from "react";
 import { PublicLayout } from "@/components/layout/PublicLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useTrackComplaint } from "@workspace/api-client-react";
+import { useTrackComplaint, getTrackComplaintQueryKey } from "@workspace/api-client-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, Clock, CheckCircle, Loader2, AlertCircle, MapPin, Tag, Calendar, User, Phone } from "lucide-react";
 
@@ -25,7 +25,7 @@ export default function Track() {
   const [query, setQuery] = useState("");
 
   const { data: complaint, isLoading, error } = useTrackComplaint(query, {
-    query: { enabled: !!query, retry: false },
+    query: { queryKey: getTrackComplaintQueryKey(query), enabled: !!query, retry: false },
   });
 
   function handleSearch(e: React.FormEvent) {
