@@ -85,7 +85,7 @@ export default function Register() {
                 <p className="text-2xl font-bold text-primary tracking-wider">{submitted.complaintId}</p>
                 <p className="text-xs text-slate-400 mt-1">Save this ID to track your complaint</p>
               </div>
-              <a href={`/api/complaints/${submitted.id}/pdf`} target="_blank" rel="noreferrer" className="w-full">
+              <a href={`${import.meta.env.VITE_API_URL}/api/complaints/${submitted.id}/pdf`} target="_blank" rel="noreferrer" className="w-full">
                 <Button className="w-full gap-2" size="lg">
                   <Download className="h-4 w-4" />
                   Download PDF Receipt
