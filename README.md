@@ -67,6 +67,7 @@ Civic complaint management in most municipalities suffers from:
 | 📧 **Email Notifications** | Optional email field triggers automatic notifications on every status change |
 | 🔍 **Complaint Tracking** | Track any complaint in real time using its unique SCMS ID (e.g. `SCMS2026001`) |
 | 📄 **PDF Receipt** | Download a professionally formatted PDF receipt immediately after registration |
+| 📸 Complaint Evidence Upload | Citizens can optionally upload photos while registering complaints to provide visual evidence |
 | 📊 **Live Statistics** | Landing page displays platform-wide complaint counts and resolution rates |
 
 ### 🔐 Admin Portal
@@ -75,6 +76,7 @@ Civic complaint management in most municipalities suffers from:
 |---|---|
 | 🔑 **Secure Authentication** | bcrypt-hashed password login with httpOnly cookie sessions (24 h expiry) |
 | 📋 **Complaint Management** | Full sortable table with inline status updates and confirmed-delete modal |
+| 👁️ Evidence Viewing | Administrators can securely view uploaded complaint images directly from the complaints dashboard |
 | 🚦 **Status Updates** | Change any complaint to Pending · In Progress · Resolved directly in the table |
 | ⚡ **Priority System** | Four-tier priority triage: Low · Medium · High · Urgent |
 | 🔎 **Search & Filters** | Search by name / ID / area; filter by status, priority, and category simultaneously |
@@ -120,6 +122,7 @@ Civic complaint management in most municipalities suffers from:
 | **Drizzle ORM** | — | Type-safe PostgreSQL query builder |
 | **PostgreSQL** | Latest | Persistent relational database |
 | **bcryptjs** | — | Secure password hashing (admin auth) |
+| Cloudinary | — | Secure cloud storage for complaint evidence images |
 | **Nodemailer** | — | SMTP email notification delivery |
 | **pdfkit** | — | Programmatic PDF receipt generation |
 | **Zod v4** | — | Runtime schema validation |
