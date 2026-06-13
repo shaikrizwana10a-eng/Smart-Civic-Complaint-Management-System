@@ -4,6 +4,7 @@ import { useListComplaints } from "@workspace/api-client-react";
 
 export default function AreaInsights() {
   const { data: complaints, isLoading } = useListComplaints();
+  console.log("Complaints:", complaints);
   const [, setLocation] = useLocation();
 
   if (isLoading) {
