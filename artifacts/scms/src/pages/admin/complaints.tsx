@@ -103,7 +103,18 @@ export default function AdminComplaints() {
     }
   }, [session, sessionLoading, setLocation]);
 
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState(""); 
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const area = params.get("area");
+   
+  if (area) {
+    setSearch(area);
+  }
+}, []);
+
+
   const [statusFilter, setStatusFilter] = useState("all");
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [priorityFilter, setPriorityFilter] = useState("all");
@@ -112,6 +123,7 @@ export default function AdminComplaints() {
     id: number;
     complaintId: string;
   } | null>(null);
+
   const [isDeleting, setIsDeleting] = useState(false);
 
   // Reset page whenever any filter/search changes

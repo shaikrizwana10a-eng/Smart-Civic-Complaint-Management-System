@@ -43,7 +43,21 @@ export function AdminLayout({ children }: { children: ReactNode }) {
           Complaints
         </Button>
       </Link>
-    </>
+
+<Link href="/admin/area-insights">
+  <Button
+    variant={
+      location === "/admin/area-insights"
+        ? "secondary"
+        : "ghost"
+    }
+    className="w-full justify-start gap-3"
+  >
+    <Building2 className="h-4 w-4" />
+    Area Insights
+  </Button>
+</Link>
+ </>
   );
 
   return (
