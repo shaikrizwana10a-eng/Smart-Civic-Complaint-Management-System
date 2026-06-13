@@ -375,6 +375,13 @@ components:
         priority:
           type: string
           enum: [Low, Medium, High, Urgent]
+       
+        imageUrl:
+           type: string
+           format: uri
+          
+           nullable: true
+
         createdAt:
           type: string
           format: date-time

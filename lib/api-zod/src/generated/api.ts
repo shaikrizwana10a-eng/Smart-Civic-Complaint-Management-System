@@ -39,6 +39,7 @@ export const ListComplaintsResponseItem = zod.object({
   "description": zod.string(),
   "status": zod.enum(['Pending', 'In Progress', 'Resolved']),
   "priority": zod.enum(['Low', 'Medium', 'High', 'Urgent']),
+  "imageUrl": zod.string().url().nullish(),
   "createdAt": zod.coerce.date()
 })
 export const ListComplaintsResponse = zod.array(ListComplaintsResponseItem)
@@ -87,6 +88,7 @@ export const TrackComplaintResponse = zod.object({
   "description": zod.string(),
   "status": zod.enum(['Pending', 'In Progress', 'Resolved']),
   "priority": zod.enum(['Low', 'Medium', 'High', 'Urgent']),
+  "imageUrl": zod.string().url().nullish(),
   "createdAt": zod.coerce.date()
 })
 
@@ -109,6 +111,7 @@ export const GetComplaintResponse = zod.object({
   "description": zod.string(),
   "status": zod.enum(['Pending', 'In Progress', 'Resolved']),
   "priority": zod.enum(['Low', 'Medium', 'High', 'Urgent']),
+  "imageUrl": zod.string().url().nullish(),
   "createdAt": zod.coerce.date()
 })
 
@@ -135,6 +138,7 @@ export const UpdateComplaintResponse = zod.object({
   "description": zod.string(),
   "status": zod.enum(['Pending', 'In Progress', 'Resolved']),
   "priority": zod.enum(['Low', 'Medium', 'High', 'Urgent']),
+  "imageUrl": zod.string().url().nullish(),
   "createdAt": zod.coerce.date()
 })
 
@@ -241,6 +245,7 @@ export const GetRecentComplaintsResponseItem = zod.object({
   "description": zod.string(),
   "status": zod.enum(['Pending', 'In Progress', 'Resolved']),
   "priority": zod.enum(['Low', 'Medium', 'High', 'Urgent']),
+  "imageUrl": zod.string().url().nullish(),
   "createdAt": zod.coerce.date()
 })
 export const GetRecentComplaintsResponse = zod.array(GetRecentComplaintsResponseItem)

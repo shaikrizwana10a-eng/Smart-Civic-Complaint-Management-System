@@ -367,89 +367,107 @@ export default function AdminComplaints() {
                   </tr>
                 </thead>
                 <tbody>
-                  {paginatedComplaints.map((c, i) => (
-                    <motion.tr
-                      key={c.id}
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ delay: i * 0.03 }}
-                      className="border-b last:border-0 hover:bg-slate-50"
-                    >
-                      <td className="px-4 py-3 font-mono text-xs text-primary whitespace-nowrap">
-                        {c.complaintId}
-                      </td>
-                      <td className="px-4 py-3 whitespace-nowrap">
-                        <div className="font-medium text-slate-900">
-                          {c.name}
-                        </div>
-                        {c.email && (
-                          <div className="text-xs text-slate-400">
-                            {c.email}
+                  {paginatedComplaints.map((complaint, i) => {
+                    const c = complaint as {
+                      id: number;
+                      complaintId: string;
+                      name: string;
+                      email?: string;
+                      mobile: string;
+                      area: string;
+                      category: string;
+                      description: string;
+                      status: string;
+                      priority: string;
+                      createdAt: string;
+                      imageUrl?: string | null;
+                    };
+                    return (
+                      <motion.tr
+                        key={c.id}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: i * 0.03 }}
+                        className="border-b last:border-0 hover:bg-slate-50"
+                      >
+                        <td className="px-4 py-3 font-mono text-xs text-primary whitespace-nowrap">
+                          {c.complaintId}
+                        </td>
+                        <td className="px-4 py-3 whitespace-nowrap">
+                          <div className="font-medium text-slate-900">
+                            {c.name}
                           </div>
-                        )}
-                      </td>
-                      <td className="px-4 py-3 text-slate-600 whitespace-nowrap">
-                        {c.area}
-                      </td>
-                      <td className="px-4 py-3 whitespace-nowrap">
-                        <span className="bg-slate-100 text-slate-700 text-xs px-2 py-0.5 rounded">
-                          {c.category}
-                        </span>
-                      </td>
-                      <td className="px-4 py-3 whitespace-nowrap">
-                        <PriorityBadge priority={c.priority} />
-                      </td>
-                      <td className="px-4 py-3 whitespace-nowrap">
-                        <Select
-                          value={c.status}
-                          onValueChange={(v) => handleStatusChange(c.id, v)}
-                        >
-                          <SelectTrigger className="h-7 text-xs w-36 border-0 p-0 bg-transparent focus:ring-0">
-                            <StatusBadge status={c.status} />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {STATUSES.map((s) => (
-                              <SelectItem key={s} value={s}>
-                                {s}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </td>
-                      <td className="px-4 py-3 text-slate-500 whitespace-nowrap text-xs">
-                        {new Date(c.createdAt).toLocaleDateString("en-IN")}
-                      </td>
-                      <td className="px-4 py-3 whitespace-nowrap">
-                        {c.imageUrl ? (
-                          <a
-                            href={c.imageUrl}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="text-blue-600 hover:underline"
+                          {c.email && (
+                            <div className="text-xs text-slate-400">
+                              {c.email}
+                            </div>
+                          )}
+                        </td>
+                        <td className="px-4 py-3 text-slate-600 whitespace-nowrap">
+                          {c.area}
+                        </td>
+                        <td className="px-4 py-3 whitespace-nowrap">
+                          <span className="bg-slate-100 text-slate-700 text-xs px-2 py-0.5 rounded">
+                            {c.category}
+                          </span>
+                        </td>
+                        <td className="px-4 py-3 whitespace-nowrap">
+                          <PriorityBadge priority={c.priority} />
+                        </td>
+                        <td className="px-4 py-3 whitespace-nowrap">
+                          <Select
+                            value={c.status}
+                            onValueChange={(v) => handleStatusChange(c.id, v)}
                           >
-                            👁️ View
-                          </a>
-                        ) : (
-                          <span className="text-slate-400">No Image</span>
-                        )}
-                      </td>
-                      <td className="px-4 py-3 whitespace-nowrap">
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="h-7 w-7 text-slate-400 hover:text-red-600 hover:bg-red-50"
-                          onClick={() =>
-                            setDeleteTarget({
-                              id: c.id,
-                              complaintId: c.complaintId,
-                            })
-                          }
-                        >
-                          <Trash2 className="h-3.5 w-3.5" />
-                        </Button>
-                      </td>
-                    </motion.tr>
-                  ))}
+                            <SelectTrigger className="h-7 text-xs w-36 border-0 p-0 bg-transparent focus:ring-0">
+                              <StatusBadge status={c.status} />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {STATUSES.map((s) => (
+                                <SelectItem key={s} value={s}>
+                                  {s}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </td>
+                        <td className="px-4 py-3 text-slate-500 whitespace-nowrap text-xs">
+                          {new Date(c.createdAt).toLocaleDateString("en-IN")}
+                        </td>
+
+                        <td className="px-4 py-3 whitespace-nowrap">
+                          {c.imageUrl ? (
+                            <a
+                              href={c.imageUrl}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="text-blue-600 hover:underline"
+                            >
+                              👁️ View
+                            </a>
+                          ) : (
+                            <span className="text-slate-400">No Image</span>
+                          )}
+                        </td>
+
+                        <td className="px-4 py-3 whitespace-nowrap">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-7 w-7 text-slate-400 hover:text-red-600 hover:bg-red-50"
+                            onClick={() =>
+                              setDeleteTarget({
+                                id: c.id,
+                                complaintId: c.complaintId,
+                              })
+                            }
+                          >
+                            <Trash2 className="h-3.5 w-3.5" />
+                          </Button>
+                        </td>
+                      </motion.tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>

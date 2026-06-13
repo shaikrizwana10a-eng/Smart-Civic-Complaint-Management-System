@@ -1,8 +1,10 @@
+import { useLocation } from "wouter";
 import { AdminLayout } from "@/components/layout/AdminLayout";
 import { useListComplaints } from "@workspace/api-client-react";
 
 export default function AreaInsights() {
   const { data: complaints, isLoading } = useListComplaints();
+  const [, setLocation] = useLocation();
 
   if (isLoading) {
     return (
@@ -40,7 +42,12 @@ export default function AreaInsights() {
           {Object.entries(groupedComplaints).map(([area, areaComplaints]) => (
             <div
               key={area}
-              className="bg-white border rounded-xl p-6 shadow-sm"
+              onClick={() =>
+                setLocation(
+                  `/admin/complaints?area=${encodeURIComponent(area)}`,
+                )
+              }
+              className="bg-white border rounded-xl p-6 shadow-sm cursor-pointer hover:shadow-md hover:border-primary transition-all"
             >
               <h2 className="text-xl font-semibold">{area}</h2>
 

@@ -39,6 +39,7 @@ export interface Complaint {
   description: string;
   status: ComplaintStatus;
   priority: ComplaintPriority;
+  imageUrl?: string | null;
   createdAt: string;
 }
 
