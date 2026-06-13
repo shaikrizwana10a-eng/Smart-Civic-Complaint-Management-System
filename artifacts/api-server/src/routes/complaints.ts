@@ -70,7 +70,12 @@ router.post("/complaints", async (req, res): Promise<void> => {
 
   const [complaint] = await db
     .insert(complaintsTable)
-    .values({ ...parsed.data, complaintId, status: "Pending" })
+    .values({
+  ...parsed.data,
+  area: parsed.data.area.trim().toUpperCase(),
+  complaintId,
+  status: "Pending",
+})
     .returning();
 
   res.status(201).json(complaint);
