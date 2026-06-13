@@ -20,4 +20,5 @@ export interface ComplaintInput {
   /** @minLength 10 */
   description: string;
   priority: ComplaintInputPriority;
+  imageUrl?: string;
 }

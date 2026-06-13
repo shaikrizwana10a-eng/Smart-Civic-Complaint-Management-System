@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { PublicLayout } from "@/components/layout/PublicLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/select";
 import { useCreateComplaint } from "@workspace/api-client-react";
 import { motion } from "framer-motion";
-import { CheckCircle, Download, FileText, Loader2 } from "lucide-react";
+import { CheckCircle, Download, FileText, ImageIcon, Loader2, UploadCloud, X } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 const CATEGORIES = [
@@ -38,6 +38,8 @@ const PRIORITIES = [
 export default function Register() {
   const { toast } = useToast();
   const createComplaint = useCreateComplaint();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   const [submitted, setSubmitted] = useState<{
     id: number;
     complaintId: string;
@@ -53,6 +55,60 @@ export default function Register() {
     description: "",
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
+
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
+
+  async function handleImageChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setImageFile(file);
+    setImageUrl(null);
+    setUploadError(null);
+    setImagePreview(URL.createObjectURL(file));
+    setIsUploading(true);
+
+    try {
+      const formData = new FormData();
+      formData.append("image", file);
+
+      const res = await fetch("/api/upload-image", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error((err as { error?: string }).error ?? "Upload failed");
+      }
+
+      const data = (await res.json()) as { imageUrl: string };
+      setImageUrl(data.imageUrl);
+    } catch (err) {
+      setUploadError(
+        err instanceof Error ? err.message : "Image upload failed. Please try again.",
+      );
+      setImageFile(null);
+      setImagePreview(null);
+      setImageUrl(null);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    } finally {
+      setIsUploading(false);
+    }
+  }
+
+  function handleRemoveImage() {
+    setImageFile(null);
+    setImagePreview(null);
+    setImageUrl(null);
+    setUploadError(null);
+    setIsUploading(false);
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  }
 
   function validate() {
     const e: Record<string, string> = {};
@@ -73,6 +129,8 @@ export default function Register() {
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!validate()) return;
+    if (isUploading) return;
+
     createComplaint.mutate(
       {
         data: {
@@ -92,6 +150,7 @@ export default function Register() {
             | "Other",
           priority: form.priority as "Low" | "Medium" | "High" | "Urgent",
           description: form.description,
+          ...(imageUrl ? { imageUrl } : {}),
         },
       },
       {
@@ -167,6 +226,7 @@ export default function Register() {
                     priority: "Medium",
                     description: "",
                   });
+                  handleRemoveImage();
                 }}
               >
                 Register Another Complaint
@@ -344,16 +404,103 @@ export default function Register() {
               )}
             </div>
 
+            {/* Image upload field */}
+            <div className="space-y-2">
+              <Label htmlFor="image">
+                Photo{" "}
+                <span className="text-slate-400 text-xs font-normal">
+                  (optional)
+                </span>
+              </Label>
+
+              {!imageFile ? (
+                <label
+                  htmlFor="image"
+                  className="flex flex-col items-center gap-2 w-full cursor-pointer rounded-xl border-2 border-dashed border-slate-200 bg-slate-50 px-4 py-6 text-center hover:border-primary/50 hover:bg-primary/5 transition-colors"
+                >
+                  <UploadCloud className="h-7 w-7 text-slate-400" />
+                  <span className="text-sm font-medium text-slate-600">
+                    Click to upload a photo
+                  </span>
+                  <span className="text-xs text-slate-400">
+                    Upload photos related to the complaint to assist authorities
+                    in faster resolution.
+                  </span>
+                  <input
+                    ref={fileInputRef}
+                    id="image"
+                    type="file"
+                    accept="image/*"
+                    className="sr-only"
+                    onChange={handleImageChange}
+                  />
+                </label>
+              ) : (
+                <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 space-y-3">
+                  <div className="flex items-center gap-3">
+                    <div className="flex-shrink-0 bg-primary/10 p-2 rounded-lg">
+                      <ImageIcon className="h-4 w-4 text-primary" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium text-slate-700 truncate">
+                        {imageFile.name}
+                      </p>
+                      <p className="text-xs text-slate-400">
+                        {(imageFile.size / 1024).toFixed(0)} KB
+                      </p>
+                    </div>
+                    {isUploading ? (
+                      <Loader2 className="h-4 w-4 text-primary animate-spin flex-shrink-0" />
+                    ) : imageUrl ? (
+                      <span className="text-xs font-medium text-green-600 flex-shrink-0">
+                        ✓ Uploaded
+                      </span>
+                    ) : null}
+                    <button
+                      type="button"
+                      onClick={handleRemoveImage}
+                      className="flex-shrink-0 p-1 rounded-md text-slate-400 hover:text-destructive hover:bg-destructive/10 transition-colors"
+                      aria-label="Remove image"
+                    >
+                      <X className="h-4 w-4" />
+                    </button>
+                  </div>
+
+                  {isUploading && (
+                    <div className="flex items-center gap-2 text-xs text-slate-500">
+                      <Loader2 className="h-3 w-3 animate-spin" />
+                      Uploading image…
+                    </div>
+                  )}
+
+                  {imagePreview && !isUploading && (
+                    <img
+                      src={imagePreview}
+                      alt="Preview"
+                      className="w-full max-h-48 object-cover rounded-lg border border-slate-200"
+                    />
+                  )}
+                </div>
+              )}
+
+              {uploadError && (
+                <p className="text-xs text-destructive">{uploadError}</p>
+              )}
+            </div>
+
             <Button
               type="submit"
               className="w-full"
               size="lg"
-              disabled={createComplaint.isPending}
+              disabled={createComplaint.isPending || isUploading}
             >
               {createComplaint.isPending ? (
                 <>
-                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />{" "}
-                  Submitting...
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" /> Submitting…
+                </>
+              ) : isUploading ? (
+                <>
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" /> Uploading image…
                 </>
               ) : (
                 "Submit Complaint"

@@ -79,6 +79,7 @@ export interface ComplaintInput {
   /** @minLength 10 */
   description: string;
   priority: ComplaintInputPriority;
+  imageUrl?: string;
 }
 
 export type ComplaintUpdateStatus = typeof ComplaintUpdateStatus[keyof typeof ComplaintUpdateStatus];

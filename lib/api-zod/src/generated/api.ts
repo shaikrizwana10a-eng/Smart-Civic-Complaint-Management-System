@@ -64,7 +64,8 @@ export const CreateComplaintBody = zod.object({
   "area": zod.string().min(createComplaintBodyAreaMin),
   "category": zod.enum(['Water Supply', 'Electricity', 'Road Damage', 'Drainage', 'Street Light', 'Sanitation', 'Garbage Collection', 'Public Property Damage', 'Other']),
   "description": zod.string().min(createComplaintBodyDescriptionMin),
-  "priority": zod.enum(['Low', 'Medium', 'High', 'Urgent'])
+  "priority": zod.enum(['Low', 'Medium', 'High', 'Urgent']),
+  "imageUrl": zod.string().url().optional()
 })
 
 

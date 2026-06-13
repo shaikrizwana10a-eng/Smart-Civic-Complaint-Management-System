@@ -413,6 +413,9 @@ components:
         priority:
           type: string
           enum: [Low, Medium, High, Urgent]
+        imageUrl:
+            type: string
+            format: uri
 
     ComplaintUpdate:
       type: object
