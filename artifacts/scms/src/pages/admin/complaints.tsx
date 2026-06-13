@@ -11,10 +11,25 @@ import {
 } from "@workspace/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { motion } from "framer-motion";
-import { Search, Trash2, Loader2, AlertTriangle, Filter, Download, ChevronLeft, ChevronRight } from "lucide-react";
+import {
+  Search,
+  Trash2,
+  Loader2,
+  AlertTriangle,
+  Filter,
+  Download,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -31,8 +46,15 @@ const PAGE_SIZE = 10;
 const STATUSES = ["Pending", "In Progress", "Resolved"];
 const PRIORITIES = ["Low", "Medium", "High", "Urgent"];
 const CATEGORIES = [
-  "Water Supply", "Electricity", "Road Damage", "Drainage",
-  "Street Light", "Sanitation", "Garbage Collection", "Public Property Damage", "Other",
+  "Water Supply",
+  "Electricity",
+  "Road Damage",
+  "Drainage",
+  "Street Light",
+  "Sanitation",
+  "Garbage Collection",
+  "Public Property Damage",
+  "Other",
 ];
 
 function StatusBadge({ status }: { status: string }) {
@@ -41,7 +63,13 @@ function StatusBadge({ status }: { status: string }) {
     "In Progress": "bg-blue-50 text-blue-700 border-blue-200",
     Resolved: "bg-green-50 text-green-700 border-green-200",
   };
-  return <span className={`text-xs px-2.5 py-0.5 rounded-full border font-medium ${map[status] || "bg-slate-100 text-slate-600"}`}>{status}</span>;
+  return (
+    <span
+      className={`text-xs px-2.5 py-0.5 rounded-full border font-medium ${map[status] || "bg-slate-100 text-slate-600"}`}
+    >
+      {status}
+    </span>
+  );
 }
 
 function PriorityBadge({ priority }: { priority: string }) {
@@ -51,7 +79,13 @@ function PriorityBadge({ priority }: { priority: string }) {
     High: "bg-orange-50 text-orange-700",
     Urgent: "bg-red-50 text-red-700 font-semibold",
   };
-  return <span className={`text-xs px-2 py-0.5 rounded font-medium ${map[priority] || "bg-slate-100 text-slate-600"}`}>{priority}</span>;
+  return (
+    <span
+      className={`text-xs px-2 py-0.5 rounded font-medium ${map[priority] || "bg-slate-100 text-slate-600"}`}
+    >
+      {priority}
+    </span>
+  );
 }
 
 export default function AdminComplaints() {
@@ -74,16 +108,25 @@ export default function AdminComplaints() {
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [priorityFilter, setPriorityFilter] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
-  const [deleteTarget, setDeleteTarget] = useState<{ id: number; complaintId: string } | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<{
+    id: number;
+    complaintId: string;
+  } | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
   // Reset page whenever any filter/search changes
-  useEffect(() => { setCurrentPage(1); }, [search, statusFilter, categoryFilter, priorityFilter]);
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [search, statusFilter, categoryFilter, priorityFilter]);
 
   const params = {
-    ...(statusFilter !== "all" && { status: statusFilter as "Pending" | "In Progress" | "Resolved" }),
+    ...(statusFilter !== "all" && {
+      status: statusFilter as "Pending" | "In Progress" | "Resolved",
+    }),
     ...(categoryFilter !== "all" && { category: categoryFilter }),
-    ...(priorityFilter !== "all" && { priority: priorityFilter as "Low" | "Medium" | "High" | "Urgent" }),
+    ...(priorityFilter !== "all" && {
+      priority: priorityFilter as "Low" | "Medium" | "High" | "Urgent",
+    }),
     ...(search && { search }),
   };
 
@@ -97,21 +140,33 @@ export default function AdminComplaints() {
   // Pagination
   const totalCount = complaints?.length ?? 0;
   const pageCount = Math.max(1, Math.ceil(totalCount / PAGE_SIZE));
-  const paginatedComplaints = complaints?.slice(
-    (currentPage - 1) * PAGE_SIZE,
-    currentPage * PAGE_SIZE
-  ) ?? [];
+  const paginatedComplaints =
+    complaints?.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE) ??
+    [];
 
   function handleStatusChange(id: number, status: string) {
     updateComplaint.mutate(
-      { id, data: { status: status as "Pending" | "In Progress" | "Resolved" } },
+      {
+        id,
+        data: { status: status as "Pending" | "In Progress" | "Resolved" },
+      },
       {
         onSuccess: () => {
-          queryClient.invalidateQueries({ queryKey: getListComplaintsQueryKey() });
-          toast({ title: "Status updated", description: `Status changed to ${status}` });
+          queryClient.invalidateQueries({
+            queryKey: getListComplaintsQueryKey(),
+          });
+          toast({
+            title: "Status updated",
+            description: `Status changed to ${status}`,
+          });
         },
-        onError: () => toast({ title: "Error", description: "Failed to update status", variant: "destructive" }),
-      }
+        onError: () =>
+          toast({
+            title: "Error",
+            description: "Failed to update status",
+            variant: "destructive",
+          }),
+      },
     );
   }
 
@@ -122,28 +177,48 @@ export default function AdminComplaints() {
       { id: deleteTarget.id },
       {
         onSuccess: () => {
-          queryClient.invalidateQueries({ queryKey: getListComplaintsQueryKey() });
-          toast({ title: "Complaint deleted", description: `${deleteTarget.complaintId} has been removed` });
+          queryClient.invalidateQueries({
+            queryKey: getListComplaintsQueryKey(),
+          });
+          toast({
+            title: "Complaint deleted",
+            description: `${deleteTarget.complaintId} has been removed`,
+          });
           setDeleteTarget(null);
           setIsDeleting(false);
           // If deleting last item on current page, go back one page
           if (paginatedComplaints.length === 1 && currentPage > 1) {
-            setCurrentPage(p => p - 1);
+            setCurrentPage((p) => p - 1);
           }
         },
         onError: () => {
-          toast({ title: "Error", description: "Failed to delete complaint", variant: "destructive" });
+          toast({
+            title: "Error",
+            description: "Failed to delete complaint",
+            variant: "destructive",
+          });
           setDeleteTarget(null);
           setIsDeleting(false);
         },
-      }
+      },
     );
   }
 
   function handleExportCSV() {
     if (!complaints || complaints.length === 0) return;
-    const headers = ["Complaint ID", "Name", "Email", "Mobile", "Area", "Category", "Priority", "Status", "Description", "Date"];
-    const rows = complaints.map(c => [
+    const headers = [
+      "Complaint ID",
+      "Name",
+      "Email",
+      "Mobile",
+      "Area",
+      "Category",
+      "Priority",
+      "Status",
+      "Description",
+      "Date",
+    ];
+    const rows = complaints.map((c) => [
       c.complaintId,
       c.name,
       c.email ?? "",
@@ -155,7 +230,7 @@ export default function AdminComplaints() {
       `"${c.description.replace(/"/g, '""')}"`,
       new Date(c.createdAt).toLocaleDateString("en-IN"),
     ]);
-    const csv = [headers.join(","), ...rows.map(r => r.join(","))].join("\n");
+    const csv = [headers.join(","), ...rows.map((r) => r.join(","))].join("\n");
     const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
@@ -163,7 +238,10 @@ export default function AdminComplaints() {
     a.download = `complaints-${new Date().toISOString().slice(0, 10)}.csv`;
     a.click();
     URL.revokeObjectURL(url);
-    toast({ title: "Exported", description: `${complaints.length} complaint${complaints.length !== 1 ? "s" : ""} downloaded as CSV` });
+    toast({
+      title: "Exported",
+      description: `${complaints.length} complaint${complaints.length !== 1 ? "s" : ""} downloaded as CSV`,
+    });
   }
 
   function clearFilters() {
@@ -174,7 +252,11 @@ export default function AdminComplaints() {
   }
 
   if (sessionLoading) {
-    return <div className="min-h-screen flex items-center justify-center"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>;
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
   }
 
   return (
@@ -184,7 +266,9 @@ export default function AdminComplaints() {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-xl font-bold text-slate-900">Complaints</h1>
-            <p className="text-sm text-slate-500">Manage and update all civic complaints</p>
+            <p className="text-sm text-slate-500">
+              Manage and update all civic complaints
+            </p>
           </div>
           <Button
             variant="outline"
@@ -205,7 +289,7 @@ export default function AdminComplaints() {
             <Input
               placeholder="Search by name, ID, area..."
               value={search}
-              onChange={e => setSearch(e.target.value)}
+              onChange={(e) => setSearch(e.target.value)}
               className="pl-9"
             />
           </div>
@@ -216,7 +300,11 @@ export default function AdminComplaints() {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All Statuses</SelectItem>
-              {STATUSES.map(s => <SelectItem key={s} value={s}>{s}</SelectItem>)}
+              {STATUSES.map((s) => (
+                <SelectItem key={s} value={s}>
+                  {s}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
           <Select value={priorityFilter} onValueChange={setPriorityFilter}>
@@ -225,7 +313,11 @@ export default function AdminComplaints() {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All Priorities</SelectItem>
-              {PRIORITIES.map(p => <SelectItem key={p} value={p}>{p}</SelectItem>)}
+              {PRIORITIES.map((p) => (
+                <SelectItem key={p} value={p}>
+                  {p}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
           <Select value={categoryFilter} onValueChange={setCategoryFilter}>
@@ -234,7 +326,11 @@ export default function AdminComplaints() {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All Categories</SelectItem>
-              {CATEGORIES.map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)}
+              {CATEGORIES.map((c) => (
+                <SelectItem key={c} value={c}>
+                  {c}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>
@@ -242,14 +338,31 @@ export default function AdminComplaints() {
         {/* Table */}
         <div className="bg-white border rounded-xl shadow-sm overflow-hidden">
           {isLoading ? (
-            <div className="py-16 flex justify-center"><Loader2 className="h-6 w-6 animate-spin text-primary" /></div>
+            <div className="py-16 flex justify-center">
+              <Loader2 className="h-6 w-6 animate-spin text-primary" />
+            </div>
           ) : paginatedComplaints.length > 0 ? (
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b bg-slate-50">
-                    {["ID", "Name", "Area", "Category", "Priority", "Status", "Date", "Actions"].map(h => (
-                      <th key={h} className="text-left px-4 py-3 text-xs font-medium text-slate-500 uppercase tracking-wider whitespace-nowrap">{h}</th>
+                    {[
+                      "ID",
+                      "Name",
+                      "Area",
+                      "Category",
+                      "Priority",
+                      "Status",
+                      "Date",
+                      "Image",
+                      "Actions",
+                    ].map((h) => (
+                      <th
+                        key={h}
+                        className="text-left px-4 py-3 text-xs font-medium text-slate-500 uppercase tracking-wider whitespace-nowrap"
+                      >
+                        {h}
+                      </th>
                     ))}
                   </tr>
                 </thead>
@@ -262,25 +375,44 @@ export default function AdminComplaints() {
                       transition={{ delay: i * 0.03 }}
                       className="border-b last:border-0 hover:bg-slate-50"
                     >
-                      <td className="px-4 py-3 font-mono text-xs text-primary whitespace-nowrap">{c.complaintId}</td>
-                      <td className="px-4 py-3 whitespace-nowrap">
-                        <div className="font-medium text-slate-900">{c.name}</div>
-                        {c.email && <div className="text-xs text-slate-400">{c.email}</div>}
+                      <td className="px-4 py-3 font-mono text-xs text-primary whitespace-nowrap">
+                        {c.complaintId}
                       </td>
-                      <td className="px-4 py-3 text-slate-600 whitespace-nowrap">{c.area}</td>
                       <td className="px-4 py-3 whitespace-nowrap">
-                        <span className="bg-slate-100 text-slate-700 text-xs px-2 py-0.5 rounded">{c.category}</span>
+                        <div className="font-medium text-slate-900">
+                          {c.name}
+                        </div>
+                        {c.email && (
+                          <div className="text-xs text-slate-400">
+                            {c.email}
+                          </div>
+                        )}
+                      </td>
+                      <td className="px-4 py-3 text-slate-600 whitespace-nowrap">
+                        {c.area}
+                      </td>
+                      <td className="px-4 py-3 whitespace-nowrap">
+                        <span className="bg-slate-100 text-slate-700 text-xs px-2 py-0.5 rounded">
+                          {c.category}
+                        </span>
                       </td>
                       <td className="px-4 py-3 whitespace-nowrap">
                         <PriorityBadge priority={c.priority} />
                       </td>
                       <td className="px-4 py-3 whitespace-nowrap">
-                        <Select value={c.status} onValueChange={(v) => handleStatusChange(c.id, v)}>
+                        <Select
+                          value={c.status}
+                          onValueChange={(v) => handleStatusChange(c.id, v)}
+                        >
                           <SelectTrigger className="h-7 text-xs w-36 border-0 p-0 bg-transparent focus:ring-0">
                             <StatusBadge status={c.status} />
                           </SelectTrigger>
                           <SelectContent>
-                            {STATUSES.map(s => <SelectItem key={s} value={s}>{s}</SelectItem>)}
+                            {STATUSES.map((s) => (
+                              <SelectItem key={s} value={s}>
+                                {s}
+                              </SelectItem>
+                            ))}
                           </SelectContent>
                         </Select>
                       </td>
@@ -288,11 +420,30 @@ export default function AdminComplaints() {
                         {new Date(c.createdAt).toLocaleDateString("en-IN")}
                       </td>
                       <td className="px-4 py-3 whitespace-nowrap">
+                        {c.imageUrl ? (
+                          <a
+                            href={c.imageUrl}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="text-blue-600 hover:underline"
+                          >
+                            👁️ View
+                          </a>
+                        ) : (
+                          <span className="text-slate-400">No Image</span>
+                        )}
+                      </td>
+                      <td className="px-4 py-3 whitespace-nowrap">
                         <Button
                           variant="ghost"
                           size="icon"
                           className="h-7 w-7 text-slate-400 hover:text-red-600 hover:bg-red-50"
-                          onClick={() => setDeleteTarget({ id: c.id, complaintId: c.complaintId })}
+                          onClick={() =>
+                            setDeleteTarget({
+                              id: c.id,
+                              complaintId: c.complaintId,
+                            })
+                          }
                         >
                           <Trash2 className="h-3.5 w-3.5" />
                         </Button>
@@ -305,7 +456,9 @@ export default function AdminComplaints() {
           ) : (
             <div className="py-16 flex flex-col items-center gap-3 text-slate-400">
               <AlertTriangle className="h-8 w-8 opacity-30" />
-              <p className="text-sm">No complaints found matching your filters</p>
+              <p className="text-sm">
+                No complaints found matching your filters
+              </p>
               <Button variant="outline" size="sm" onClick={clearFilters}>
                 Clear filters
               </Button>
@@ -326,7 +479,7 @@ export default function AdminComplaints() {
                   variant="outline"
                   size="sm"
                   className="gap-1 h-8"
-                  onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                  onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                   disabled={currentPage === 1}
                 >
                   <ChevronLeft className="h-3.5 w-3.5" />
@@ -342,7 +495,13 @@ export default function AdminComplaints() {
                     } else if (currentPage >= pageCount - 3) {
                       page = i === 0 ? 1 : pageCount - 6 + i;
                     } else {
-                      const pages = [1, currentPage - 1, currentPage, currentPage + 1, pageCount];
+                      const pages = [
+                        1,
+                        currentPage - 1,
+                        currentPage,
+                        currentPage + 1,
+                        pageCount,
+                      ];
                       page = pages[Math.min(i, pages.length - 1)];
                     }
                     return (
@@ -362,7 +521,9 @@ export default function AdminComplaints() {
                   variant="outline"
                   size="sm"
                   className="gap-1 h-8"
-                  onClick={() => setCurrentPage(p => Math.min(pageCount, p + 1))}
+                  onClick={() =>
+                    setCurrentPage((p) => Math.min(pageCount, p + 1))
+                  }
                   disabled={currentPage === pageCount}
                 >
                   Next
@@ -375,14 +536,21 @@ export default function AdminComplaints() {
       </div>
 
       {/* Delete Confirmation Dialog */}
-      <AlertDialog open={!!deleteTarget} onOpenChange={(open) => { if (!open) setDeleteTarget(null); }}>
+      <AlertDialog
+        open={!!deleteTarget}
+        onOpenChange={(open) => {
+          if (!open) setDeleteTarget(null);
+        }}
+      >
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Delete Complaint</AlertDialogTitle>
             <AlertDialogDescription>
               Are you sure you want to permanently delete complaint{" "}
-              <span className="font-mono font-semibold text-slate-900">{deleteTarget?.complaintId}</span>?
-              This action cannot be undone.
+              <span className="font-mono font-semibold text-slate-900">
+                {deleteTarget?.complaintId}
+              </span>
+              ? This action cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -392,7 +560,14 @@ export default function AdminComplaints() {
               disabled={isDeleting}
               className="bg-red-600 hover:bg-red-700 focus:ring-red-600"
             >
-              {isDeleting ? <><Loader2 className="h-4 w-4 mr-2 animate-spin" />Deleting...</> : "Delete"}
+              {isDeleting ? (
+                <>
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  Deleting...
+                </>
+              ) : (
+                "Delete"
+              )}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
