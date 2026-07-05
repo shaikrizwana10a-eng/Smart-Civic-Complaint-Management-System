@@ -1,0 +1,358 @@
+# AI Decision Dashboard Enhancement for SCMS
+
+You are an expert Full Stack Engineer and AI Solutions Architect.
+
+You are working on an already completed and fully functional project called **Smart Civic Complaint Management System (SCMS)**.
+
+Current Technology Stack:
+
+* Frontend: React + TypeScript + Tailwind CSS + shadcn/ui
+* Backend: Node.js + Express.js
+* Database: PostgreSQL (Neon)
+* ORM: Drizzle ORM
+* Deployment: Render
+* Existing Features:
+
+  * Complaint Registration
+  * Complaint Tracking
+  * Admin Dashboard
+  * Complaint Status Management
+  * CSV Export
+  * PDF Receipt Generation
+  * GPS Location Capture
+  * Complaint Categories
+  * User-friendly UI
+
+The application is fully working.
+
+**Do NOT modify or break any existing functionality.**
+
+The objective is NOT to build another complaint management system.
+
+The objective is to transform SCMS into an **AI-Powered Decision Intelligence Platform** that helps government officials make faster and better civic decisions.
+
+The AI Decision Dashboard should be completely separate from the existing complaint management pages.
+
+It should become a new Admin module.
+
+---
+
+## Dashboard Title
+
+AI Decision Dashboard
+
+---
+
+## Objective
+
+Instead of simply displaying complaint records, the dashboard must continuously analyze complaint data and generate intelligent insights, summaries, recommendations and predictions.
+
+The dashboard should assist administrators in decision-making rather than simple data viewing.
+
+---
+
+# Required Features
+
+## 1. AI Complaint Summary
+
+Generate an AI-generated summary of all complaints.
+
+Example:
+
+* Total complaints received
+* Complaint category distribution
+* Pending vs Resolved
+* Most affected locality
+* Overall observations
+
+This should appear as a summary card at the top of the dashboard.
+
+---
+
+## 2. Complaint Hotspot Detection
+
+Analyze complaints and identify locations with unusually high complaint frequency.
+
+Display:
+
+* Top affected localities
+* Complaint count
+* Most common issue
+* AI explanation of why the area needs attention
+
+---
+
+## 3. AI Priority Recommendation
+
+The AI should recommend which locality should receive immediate administrative attention.
+
+The recommendation must be based on:
+
+* Number of complaints
+* Complaint category
+* Severity
+* Pending complaints
+
+Display:
+
+Recommended Action
+
+Reason for Recommendation
+
+Suggested Department
+
+Priority Level
+
+---
+
+## 4. Complaint Trend Analysis
+
+Generate visual trend analysis.
+
+Examples:
+
+Road Damage
+
+↑ increasing
+
+Drainage
+
+↑ increasing
+
+Garbage
+
+↓ decreasing
+
+Street Lights
+
+Stable
+
+Use existing chart components if available.
+
+---
+
+## 5. Area-wise Analytics
+
+Group complaints based on locality.
+
+Display:
+
+Top Complaint Areas
+
+Complaint Count
+
+Dominant Complaint Category
+
+Pending Percentage
+
+---
+
+## 6. AI Recommendations
+
+Gemini should generate practical recommendations.
+
+Example:
+
+"Deploy a road maintenance team to MVP Colony because road damage complaints have increased significantly during the past two weeks."
+
+These recommendations should sound professional.
+
+---
+
+## 7. Natural Language AI Assistant
+
+Create an "Ask AI" section.
+
+Administrator should be able to ask questions such as:
+
+Which locality needs immediate attention?
+
+Summarize drainage complaints.
+
+Show unresolved complaints.
+
+Which category increased this month?
+
+Which areas have repeated complaints?
+
+Gemini should answer using complaint data.
+
+---
+
+## 8. Pattern Detection
+
+Identify recurring civic problems.
+
+Examples:
+
+Repeated drainage complaints
+
+Repeated road complaints
+
+Repeated electricity complaints
+
+Display:
+
+Recurring Issue
+
+Affected Area
+
+Occurrences
+
+AI Recommendation
+
+---
+
+## 9. Similar Complaint Detection
+
+Detect duplicate or highly similar complaints.
+
+Display:
+
+Number of similar complaints
+
+Areas affected
+
+Suggested merging or grouped resolution
+
+---
+
+## 10. Predictive Analytics
+
+Use historical complaint data to estimate future complaint trends.
+
+Examples:
+
+Drainage complaints may increase.
+
+Road damage complaints are likely to rise.
+
+Water supply complaints are decreasing.
+
+Clearly label these as AI Predictions.
+
+---
+
+## 11. Department Recommendation
+
+Automatically recommend the responsible department.
+
+Example:
+
+Road Damage
+
+→ Roads Department
+
+Garbage
+
+→ Sanitation Department
+
+Street Light
+
+→ Electrical Department
+
+Drainage
+
+→ Water & Drainage Department
+
+Water Supply
+
+→ Water Department
+
+Others
+
+→ Manual Review
+
+---
+
+## 12. AI Severity Analysis
+
+Analyze complaint descriptions.
+
+Assign:
+
+Low
+
+Medium
+
+High
+
+Emergency
+
+Example:
+
+Road crack
+
+→ Low
+
+Overflowing drain
+
+→ High
+
+Electric pole fallen
+
+→ Emergency
+
+This should assist administrators in prioritizing work.
+
+---
+
+# UI Requirements
+
+Create a clean modern dashboard.
+
+Use cards.
+
+Use charts.
+
+Use statistics.
+
+Use tables where appropriate.
+
+Use responsive design.
+
+Follow the existing SCMS design system.
+
+Do not introduce unrelated styling.
+
+---
+
+# AI Requirements
+
+Use Google's Gemini API.
+
+The AI should never hallucinate.
+
+Base all responses only on complaint data stored in the database.
+
+When historical data is insufficient, clearly indicate that additional data is required.
+
+---
+
+# Performance Requirements
+
+The dashboard should remain fast.
+
+Avoid unnecessary API calls.
+
+Use caching where appropriate.
+
+Do not block the UI while AI responses are loading.
+
+Show loading indicators.
+
+Handle API failures gracefully.
+
+---
+
+# Deliverables
+
+Implement this as a completely new Admin module called:
+
+AI Decision Dashboard
+
+Maintain complete backward compatibility with the existing SCMS system.
+
+Do not remove or modify existing complaint registration, tracking, PDF generation, CSV export, GPS location, or admin functionality.
+
+The final result should resemble an enterprise-grade AI-powered civic decision intelligence platform rather than a basic complaint management system.
