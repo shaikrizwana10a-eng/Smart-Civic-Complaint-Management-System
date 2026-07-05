@@ -12,7 +12,7 @@ import {
   TrackComplaintParams,
 } from "@workspace/api-zod";
 import { generateComplaintPdf } from "../lib/pdf";
-import { sendStatusNotification } from "../lib/mailer";
+import { sendStatusNotification, sendComplaintConfirmation } from "../lib/mailer";
 
 const router: IRouter = Router();
 
@@ -77,6 +77,10 @@ router.post("/complaints", async (req, res): Promise<void> => {
   status: "Pending",
 })
     .returning();
+
+  if (complaint.email) {
+    await sendComplaintConfirmation(complaint.email, complaint.name, complaint.complaintId);
+  }
 
   res.status(201).json(complaint);
 });
