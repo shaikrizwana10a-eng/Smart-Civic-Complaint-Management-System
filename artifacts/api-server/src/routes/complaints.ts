@@ -12,7 +12,10 @@ import {
   TrackComplaintParams,
 } from "@workspace/api-zod";
 import { generateComplaintPdf } from "../lib/pdf";
-import { sendStatusNotification, sendComplaintConfirmation } from "../lib/mailer";
+import {
+  sendStatusNotification,
+  sendComplaintConfirmation,
+} from "../lib/mailer";
 
 const router: IRouter = Router();
 
@@ -46,7 +49,7 @@ router.get("/complaints", async (req, res): Promise<void> => {
   if (area) conditions.push(like(complaintsTable.area, `%${area}%`));
   if (search) {
     conditions.push(
-      sql`(${complaintsTable.name} ILIKE ${`%${search}%`} OR ${complaintsTable.complaintId} ILIKE ${`%${search}%`} OR ${complaintsTable.area} ILIKE ${`%${search}%`})`
+      sql`(${complaintsTable.name} ILIKE ${`%${search}%`} OR ${complaintsTable.complaintId} ILIKE ${`%${search}%`} OR ${complaintsTable.area} ILIKE ${`%${search}%`})`,
     );
   }
 
@@ -68,42 +71,56 @@ router.post("/complaints", async (req, res): Promise<void> => {
 
   const complaintId = await generateComplaintId();
 
-  const [complaint] = await db
-    .insert(complaintsTable)
-    .values({
-  ...parsed.data,
-  area: parsed.data.area.trim().toUpperCase(),
-  complaintId,
-  status: "Pending",
-})
-    .returning();
+  try {
+    const [complaint] = await db
+      .insert(complaintsTable)
+      .values({
+        ...parsed.data,
+        area: parsed.data.area.trim().toUpperCase(),
+        complaintId,
+        status: "Pending",
+      })
+      .returning();
 
-  if (complaint.email) {
-    await sendComplaintConfirmation(complaint.email, complaint.name, complaint.complaintId);
+    if (complaint.email) {
+      await sendComplaintConfirmation(
+        complaint.email,
+        complaint.name,
+        complaint.complaintId,
+      );
+    }
+
+    res.status(201).json(complaint);
+  } catch (err) {
+    console.error("DATABASE ERROR:", err);
+    res.status(500).json({
+      error: err instanceof Error ? err.message : String(err),
+    });
   }
-
-  res.status(201).json(complaint);
 });
 
-router.get("/complaints/track/:complaintId", async (req, res): Promise<void> => {
-  const params = TrackComplaintParams.safeParse(req.params);
-  if (!params.success) {
-    res.status(400).json({ error: params.error.message });
-    return;
-  }
+router.get(
+  "/complaints/track/:complaintId",
+  async (req, res): Promise<void> => {
+    const params = TrackComplaintParams.safeParse(req.params);
+    if (!params.success) {
+      res.status(400).json({ error: params.error.message });
+      return;
+    }
 
-  const [complaint] = await db
-    .select()
-    .from(complaintsTable)
-    .where(eq(complaintsTable.complaintId, params.data.complaintId));
+    const [complaint] = await db
+      .select()
+      .from(complaintsTable)
+      .where(eq(complaintsTable.complaintId, params.data.complaintId));
 
-  if (!complaint) {
-    res.status(404).json({ error: "Complaint not found" });
-    return;
-  }
+    if (!complaint) {
+      res.status(404).json({ error: "Complaint not found" });
+      return;
+    }
 
-  res.json(complaint);
-});
+    res.json(complaint);
+  },
+);
 
 router.get("/complaints/:id", async (req, res): Promise<void> => {
   const raw = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
@@ -156,7 +173,11 @@ router.patch("/complaints/:id", async (req, res): Promise<void> => {
 
   // Send email notification if complaint has an email and status changed
   if (complaint.email && parsed.data.status) {
-    await sendStatusNotification(complaint.email, complaint.complaintId, parsed.data.status);
+    await sendStatusNotification(
+      complaint.email,
+      complaint.complaintId,
+      parsed.data.status,
+    );
   }
 
   res.json(complaint);
@@ -204,7 +225,7 @@ router.get("/complaints/:id/pdf", async (req, res): Promise<void> => {
   res.setHeader("Content-Type", "application/pdf");
   res.setHeader(
     "Content-Disposition",
-    `attachment; filename="${complaint.complaintId}.pdf"`
+    `attachment; filename="${complaint.complaintId}.pdf"`,
   );
 
   const doc = generateComplaintPdf(complaint);
