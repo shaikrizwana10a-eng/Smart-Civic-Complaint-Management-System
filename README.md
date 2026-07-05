@@ -12,9 +12,9 @@
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-4-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
 [![License](https://img.shields.io/badge/License-MIT-22C55E?style=flat-square)](LICENSE)
 
-**A modern, SaaS-grade civic complaint portal — built for citizens, managed by administrators.**
+**An AI-Powered Civic Decision Intelligence Platform that enables citizens to report civic issues while helping administrators analyze complaint data, generate AI-powered insights, identify hotspots, predict trends, and make better civic decisions.**
 
-[🌐 Live Demo](#) · [📖 Architecture](#-system-architecture) · [⚙️ Setup](#%EF%B8%8F-installation--setup) · [✨ Features](#-features)
+[🌐 Live Demo](https://smart-civic-complaint-management-system-1.onrender.com) · [📖 Architecture](#-system-architecture) · [⚙️ Setup](#%EF%B8%8F-installation--setup) · [✨ Features](#-features)
 
 </div>
 
@@ -39,7 +39,7 @@
 
 The **Smart Civic Complaint Management System (SCMS)** is a full-stack web application that bridges the gap between citizens and local government. It provides a clean, modern interface — inspired by tools like Linear and Vercel — for citizens to file and track civic complaints, and for administrators to manage, prioritize, and resolve them efficiently.
 
-Unlike traditional government portals that feel outdated and frustrating to use, SCMS delivers a fast, transparent, and accountable civic experience with real-time tracking, PDF receipts, priority-based triage, and an analytics-driven admin dashboard.
+Unlike traditional government portals that feel outdated and frustrating to use, SCMS delivers a fast, transparent, and accountable civic experience with real-time tracking, PDF receipts, priority-based triage, and an analytics-driven admin dashboard. SCMS also includes an **AI Decision Dashboard** powered by **Google Gemini**, enabling administrators to transform complaint data into actionable civic intelligence. The platform identifies complaint hotspots, summarizes trends, recommends priority actions, detects recurring issues, predicts future complaint patterns, and provides an AI Decision Assistant for natural language interaction with complaint data.
 
 ---
 
@@ -67,7 +67,7 @@ Civic complaint management in most municipalities suffers from:
 | 📧 **Email Notifications** | Optional email field triggers automatic notifications on every status change |
 | 🔍 **Complaint Tracking** | Track any complaint in real time using its unique SCMS ID (e.g. `SCMS2026001`) |
 | 📄 **PDF Receipt** | Download a professionally formatted PDF receipt immediately after registration |
-| 📸 Complaint Evidence Upload | Citizens can optionally upload photos while registering complaints to provide visual evidence |
+| 📸 **Complaint Evidence Upload** | Citizens can optionally upload photos while registering complaints to provide visual evidence |
 | 📊 **Live Statistics** | Landing page displays platform-wide complaint counts and resolution rates |
 
 ### 🔐 Admin Portal
@@ -76,7 +76,7 @@ Civic complaint management in most municipalities suffers from:
 |---|---|
 | 🔑 **Secure Authentication** | bcrypt-hashed password login with httpOnly cookie sessions (24 h expiry) |
 | 📋 **Complaint Management** | Full sortable table with inline status updates and confirmed-delete modal |
-| 👁️ Evidence Viewing | Administrators can securely view uploaded complaint images directly from the complaints dashboard |
+| 👁️ **Evidence Viewing** | Administrators can securely view uploaded complaint images directly from the complaints dashboard |
 | 🚦 **Status Updates** | Change any complaint to Pending · In Progress · Resolved directly in the table |
 | ⚡ **Priority System** | Four-tier priority triage: Low · Medium · High · Urgent |
 | 🔎 **Search & Filters** | Search by name / ID / area; filter by status, priority, and category simultaneously |
@@ -93,6 +93,39 @@ Civic complaint management in most municipalities suffers from:
 | 📈 **Monthly Trend** | Line chart of complaints filed over the past 12 months |
 | 🕒 **Recent Activity** | Live table of the 5 most recently filed complaints |
 | 🔢 **Stat Cards** | Real-time Total, Pending, In Progress, and Resolved counts |
+
+---
+
+## 🧠 AI Decision Dashboard
+
+The AI Decision Dashboard transforms complaint data into actionable civic intelligence using **Google Gemini**.
+
+### AI Capabilities
+
+| Feature | Description |
+|---|---|
+| 🤖 AI Complaint Summary | Generates intelligent summaries of complaint data |
+| 📍 Hotspot Detection | Identifies localities with unusually high complaint frequency |
+| 🚨 Priority Recommendation | Suggests which civic issues require immediate attention |
+| 📈 Trend Analysis | Detects increasing and decreasing complaint categories |
+| 🏙️ Area-wise Analytics | Groups complaints locality-wise for better planning |
+| 🧠 AI Recommendations | Suggests actions for administrators based on complaint data |
+| 💬 AI Decision Assistant | Answers administrator questions using natural language |
+| 🔁 Pattern Detection | Detects recurring civic issues |
+| 🔍 Similar Complaint Detection | Identifies duplicate or similar complaints |
+| 📊 Predictive Analytics | Predicts future complaint trends |
+| 🏢 Department Recommendation | Suggests the responsible municipal department |
+| ⚠️ Severity Analysis | Determines complaint severity using AI |
+
+The AI Decision Assistant supports questions such as:
+
+- Which locality has the highest pending complaints?
+- Summarize today's complaints.
+- Which department requires immediate attention?
+- Predict next week's complaint trend.
+- Which complaints are similar?
+
+All AI responses are generated using **real complaint data** and are grounded in the system database.
 
 ---
 
@@ -121,8 +154,9 @@ Civic complaint management in most municipalities suffers from:
 | **TypeScript** | 5.9 | Type safety across all routes |
 | **Drizzle ORM** | — | Type-safe PostgreSQL query builder |
 | **PostgreSQL** | Latest | Persistent relational database |
+| **Google Gemini API** | Latest | AI-powered civic decision intelligence and AI assistant |
 | **bcryptjs** | — | Secure password hashing (admin auth) |
-| Cloudinary | — | Secure cloud storage for complaint evidence images |
+| **Cloudinary** | — | Secure cloud storage for complaint evidence images |
 | **Nodemailer** | — | SMTP email notification delivery |
 | **pdfkit** | — | Programmatic PDF receipt generation |
 | **Zod v4** | — | Runtime schema validation |
@@ -170,13 +204,30 @@ Civic complaint management in most municipalities suffers from:
                               │   (node-postgres)   │
                               └─────────┬──────────┘
                                         │
-                              ┌─────────▼──────────┐
-                              │   PostgreSQL        │
+                              ┌─────────▼──────────┐                 
+                              │    PostgreSQL      │
                               │                    │
-                              │  complaints        │
-                              │  complaint_counter │
+                              │ complaints         │
+                              │ complaint_counter  │
+                              └─────────┬──────────┘
+                                        │
+                                        ▼
+                              ┌────────────────────┐
+                              │ AI Decision Engine │
+                              └─────────┬──────────┘
+                                        │
+                                        ▼
+                              ┌────────────────────┐
+                              │ Google Gemini API  │
+                              └─────────┬──────────┘
+                                        │
+                                        ▼
+                              ┌────────────────────┐
+                              │ AI Dashboard &     │
+                              │ AI Assistant       │
                               └────────────────────┘
-```
+
+---
 
 ### Monorepo Structure
 
@@ -240,6 +291,7 @@ pnpm install
 ```env
 # ── Required ────────────────────────────────────────────
 DATABASE_URL=postgresql://user:password@localhost:5432/scms
+GEMINI_API_KEY=your_gemini_api_key
 
 # ── Email notifications (optional) ─────────────────────
 SMTP_HOST=smtp.gmail.com
@@ -359,6 +411,13 @@ pnpm run build
 | `GET` | `/api/analytics/monthly-trend` | Monthly complaint counts for the past 12 months |
 | `GET` | `/api/analytics/recent` | 5 most recently filed complaints |
 
+### AI
+
+| Method | Endpoint | Description |
+|---|---|---|
+| `GET` | `/api/ai/insights` | Generate AI-powered dashboard insights |
+| `POST` | `/api/ai/ask` | Ask questions about complaint data using the AI Decision Assistant |
+
 ---
 
 ## 🔮 Future Enhancements
@@ -366,8 +425,8 @@ pnpm run build
 | # | Feature | Description | Priority |
 |---|---|---|---|
 | 1 | 📱 **Mobile App** | React Native / Expo companion app for on-the-go complaint filing | 🔴 High |
-| 2 | 🗺️ **Geo-tagging** | GPS coordinates + interactive map view for locating issues | 🔴 High |
-| 3 | 📸 **Photo Attachments** | Allow citizens to upload images of the civic problem | 🔴 High |
+| 2 | 🗺️ **Interactive GIS Maps** | Display complaint hotspots on an interactive geographic map with clustering and heatmaps | 🔴 High |
+| 3 | 🧠 **Smart Resource Allocation** | Recommend deployment of field teams based on complaint density and severity | 🔴 High |
 | 4 | 👥 **Multi-Admin Roles** | Role-based access: Super Admin · Department Officer · Viewer | 🟡 Medium |
 | 5 | 🤖 **AI Auto-Classification** | LLM-powered automatic category and priority assignment | 🟡 Medium |
 | 6 | 🔔 **Push Notifications** | Real-time browser and mobile push alerts on status changes | 🟡 Medium |
@@ -426,3 +485,11 @@ pnpm run build
 ## 📋 Complaint Management
 
 ![Complaint Management](admin_complaints.png)
+
+## 🧠 AI Decision Dashboard
+
+![AI Dashboard](ai_dashboard.png)
+
+## 🤖 AI Decision Assistant
+
+![AI Assistant](ai_assistant.png)
