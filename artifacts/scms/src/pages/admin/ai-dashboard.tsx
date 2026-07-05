@@ -23,6 +23,7 @@ import {
 } from "recharts";
 import { motion, AnimatePresence } from "framer-motion";
 import { formatDistanceToNow } from "date-fns";
+import { useDocumentTitle } from "@/hooks/use-document-title";
 import {
   Sparkles,
   Loader2,
@@ -144,6 +145,7 @@ function DashboardSkeleton() {
 }
 
 export default function AiDashboard() {
+  useDocumentTitle("AI Decision Dashboard");
   const [, setLocation] = useLocation();
   const { data: session, isLoading: sessionLoading } = useGetAdminSession({
     query: { queryKey: getGetAdminSessionQueryKey(), retry: false },
@@ -194,7 +196,10 @@ export default function AiDashboard() {
         onError: () => {
           setConversation((prev) => [
             ...prev,
-            { role: "ai", text: "Sorry, the AI assistant is unavailable right now. Please try again shortly." },
+            {
+              role: "ai",
+              text: "The AI assistant couldn't process that request. This usually means the AI service is temporarily unavailable — please try again in a moment.",
+            },
           ]);
         },
       },
@@ -519,17 +524,19 @@ export default function AiDashboard() {
           </motion.div>
         )}
 
-        {/* Ask AI */}
-        <SectionCard title="Ask AI" icon={Sparkles} className="border-primary/20">
-          <div className="flex items-center justify-between mb-3">
-            <p className="text-xs text-slate-500">
-              Ask a question about complaints in natural language — answers are grounded only in real data.
+        {/* AI Decision Assistant */}
+        <SectionCard title="🧠 AI Decision Assistant" icon={Sparkles} className="border-primary/20">
+          <div className="flex items-start justify-between gap-3 mb-4">
+            <p className="text-xs sm:text-sm text-slate-500 leading-relaxed">
+              Ask questions about complaint trends, hotspots, priorities, and recommendations.
+              Responses are generated only from real complaint data.
             </p>
             {conversation.length > 0 && (
               <button
                 type="button"
                 onClick={() => setConversation([])}
-                className="text-xs text-slate-400 hover:text-slate-600 flex items-center gap-1 shrink-0 ml-3"
+                aria-label="Clear conversation"
+                className="text-xs text-slate-400 hover:text-slate-600 flex items-center gap-1 shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 rounded px-1.5 py-0.5"
               >
                 <X className="h-3 w-3" /> Clear
               </button>
@@ -537,13 +544,13 @@ export default function AiDashboard() {
           </div>
 
           {conversation.length === 0 && (
-            <div className="flex flex-wrap gap-2 mb-3">
+            <div className="flex flex-wrap gap-2 mb-4" role="group" aria-label="Suggested questions">
               {SUGGESTED_QUESTIONS.map((q) => (
                 <button
                   key={q}
                   type="button"
                   onClick={() => submitQuestion(q)}
-                  className="text-xs px-3 py-1.5 rounded-full border border-slate-200 text-slate-600 hover:border-primary/40 hover:bg-primary/5 hover:text-primary transition-colors"
+                  className="text-xs px-3 py-1.5 rounded-full border border-slate-200 text-slate-600 hover:border-primary/40 hover:bg-primary/5 hover:text-primary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
                 >
                   {q}
                 </button>
@@ -599,6 +606,7 @@ export default function AiDashboard() {
               value={question}
               onChange={(e) => setQuestion(e.target.value)}
               placeholder="e.g. Which areas have the most unresolved complaints this month?"
+              aria-label="Ask the AI assistant a question about complaint data"
               className="min-h-[44px] max-h-32 resize-none"
               onKeyDown={(e) => {
                 if (e.key === "Enter" && !e.shiftKey) {
@@ -607,7 +615,12 @@ export default function AiDashboard() {
                 }
               }}
             />
-            <Button onClick={handleAsk} disabled={askAi.isPending || !question.trim()} className="shrink-0">
+            <Button
+              onClick={handleAsk}
+              disabled={askAi.isPending || !question.trim()}
+              className="shrink-0"
+              aria-label="Send question to AI assistant"
+            >
               {askAi.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
             </Button>
           </div>

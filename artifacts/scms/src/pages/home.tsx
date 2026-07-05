@@ -4,8 +4,10 @@ import { Button } from "@/components/ui/button";
 import { FileText, Search, ArrowRight, Activity, CheckCircle, Clock } from "lucide-react";
 import { useGetStats, getGetStatsQueryKey } from "@workspace/api-client-react";
 import { motion } from "framer-motion";
+import { useDocumentTitle } from "@/hooks/use-document-title";
 
 export default function Home() {
+  useDocumentTitle("Home");
   const { data: stats } = useGetStats({
     query: {
       queryKey: getGetStatsQueryKey(),

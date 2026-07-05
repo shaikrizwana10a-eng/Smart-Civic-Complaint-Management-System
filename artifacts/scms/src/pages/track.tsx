@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { useTrackComplaint, getTrackComplaintQueryKey } from "@workspace/api-client-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, Clock, CheckCircle, Loader2, AlertCircle, MapPin, Tag, Calendar, User, Phone } from "lucide-react";
+import { useDocumentTitle } from "@/hooks/use-document-title";
 
 function StatusBadge({ status }: { status: string }) {
   const config: Record<string, { color: string; icon: React.ReactNode; bg: string }> = {
@@ -21,6 +22,7 @@ function StatusBadge({ status }: { status: string }) {
 }
 
 export default function Track() {
+  useDocumentTitle("Track Complaint");
   const [search, setSearch] = useState("");
   const [query, setQuery] = useState("");
 

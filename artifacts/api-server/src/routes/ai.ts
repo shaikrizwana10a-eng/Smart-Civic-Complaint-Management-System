@@ -87,7 +87,7 @@ Based STRICTLY on this data, respond with a JSON object matching this exact shap
   "predictions": "a 1-3 sentence forward-looking prediction that explicitly cites the forecastNextMonth number and direction, and calls out one specific risk or opportunity implied by the trend"
 }
 
-Write for a busy official skimming on a phone: short sentences, concrete nouns, no jargon, no markdown. Respond with ONLY the JSON object.`;
+Write like a professional civic intelligence report: short sentences, concrete nouns, no jargon, no markdown. Vary sentence openings and word choice across the summary, recommendations, and predictions — do not reuse the same phrase (e.g. "significant backlog", "immediately resolve") more than once across the whole response. Respond with ONLY the JSON object.`;
 }
 
 function buildAnalysisPrompt(rows: ComplaintRow[]): string {

@@ -41,6 +41,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { useToast } from "@/hooks/use-toast";
+import { useDocumentTitle } from "@/hooks/use-document-title";
 
 const PAGE_SIZE = 10;
 const STATUSES = ["Pending", "In Progress", "Resolved"];
@@ -89,6 +90,7 @@ function PriorityBadge({ priority }: { priority: string }) {
 }
 
 export default function AdminComplaints() {
+  useDocumentTitle("Complaints");
   const [, setLocation] = useLocation();
   const { toast } = useToast();
   const queryClient = useQueryClient();

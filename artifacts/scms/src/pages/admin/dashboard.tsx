@@ -20,6 +20,7 @@ import {
 } from "recharts";
 import { motion } from "framer-motion";
 import { Activity, CheckCircle, Clock, Loader2, ArrowRight } from "lucide-react";
+import { useDocumentTitle } from "@/hooks/use-document-title";
 
 const COLORS = ["#2563EB", "#22C55E", "#F59E0B", "#EF4444", "#8B5CF6", "#EC4899", "#06B6D4", "#F97316", "#10B981"];
 
@@ -47,6 +48,7 @@ function StatusBadge({ status }: { status: string }) {
 }
 
 export default function AdminDashboard() {
+  useDocumentTitle("Dashboard");
   const [, setLocation] = useLocation();
   const { data: session, isLoading: sessionLoading } = useGetAdminSession({ query: { queryKey: getGetAdminSessionQueryKey(), retry: false } });
 

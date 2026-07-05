@@ -15,6 +15,7 @@ import { useCreateComplaint } from "@workspace/api-client-react";
 import { motion } from "framer-motion";
 import { CheckCircle, Download, FileText, ImageIcon, Loader2, MapPin, UploadCloud, X } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useDocumentTitle } from "@/hooks/use-document-title";
 
 const CATEGORIES = [
   "Water Supply",
@@ -36,6 +37,7 @@ const PRIORITIES = [
 ];
 
 export default function Register() {
+  useDocumentTitle("Register Complaint");
   const { toast } = useToast();
   const createComplaint = useCreateComplaint();
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -257,7 +259,7 @@ export default function Register() {
                 </p>
               </div>
               <a
-                href={`https://smart-civic-complaint-management-system-2.onrender.com/api/complaints/${submitted.id}/pdf`}
+                href={`${import.meta.env.BASE_URL}api/complaints/${submitted.id}/pdf`}
                 target="_blank"
                 rel="noreferrer"
                 className="w-full"

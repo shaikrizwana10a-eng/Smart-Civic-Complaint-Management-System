@@ -1,0 +1,235 @@
+You are a Senior Full Stack Engineer, UI/UX Designer, and Product Engineer.
+
+The Smart Civic Complaint Management System (SCMS) is now feature complete.
+
+DO NOT add any new features.
+
+Your objective is to transform the application from a working student project into a polished, production-quality AI-powered civic platform.
+
+Maintain complete backward compatibility with every existing feature.
+
+Do not modify any business logic or database schema unless absolutely necessary.
+
+Existing features that must remain untouched:
+
+• Complaint Registration
+• Complaint Tracking
+• Admin Dashboard
+• Complaint Status Management
+• CSV Export
+• PDF Receipt Generation
+• GPS Location Capture
+• Photo Upload
+• AI Decision Dashboard
+• Gemini Integration
+• AI Decision Assistant
+• Complaint Analytics
+
+-----------------------------------------
+AI DECISION ASSISTANT
+-----------------------------------------
+
+Rename the current section title:
+
+Ask AI
+
+to
+
+🧠 AI Decision Assistant
+
+Change the subtitle to:
+
+Ask questions about complaint trends, hotspots, priorities, and recommendations. Responses are generated only from real complaint data.
+
+Improve the AI assistant experience:
+
+• Keep the suggested prompts as clickable chips.
+• Improve spacing and typography.
+• Add a loading animation while AI is generating a response.
+• Display friendly error messages if AI is unavailable.
+• Ensure responses are easy to read.
+• Keep all answers grounded only in complaint data.
+
+-----------------------------------------
+UI & UX POLISH
+-----------------------------------------
+
+Review the entire application and improve visual consistency.
+
+Improve:
+
+• Card spacing
+• Margins
+• Padding
+• Border radius
+• Shadows
+• Alignment
+• Typography hierarchy
+• Button consistency
+• Icon consistency
+• Section spacing
+• Color consistency
+
+Do not redesign the application.
+
+Simply make it look cleaner and more professional while preserving the existing SCMS design language.
+
+-----------------------------------------
+AI DASHBOARD POLISH
+-----------------------------------------
+
+Improve the AI Decision Dashboard presentation.
+
+Ensure every AI card has:
+
+• Clear heading
+• Professional icon
+• Consistent spacing
+• Better visual hierarchy
+
+Improve wording of:
+
+• AI Summary
+• Recommendations
+• Predictions
+• Hotspot Detection
+• Severity Analysis
+
+Responses should sound like professional civic intelligence reports.
+
+Avoid repetitive wording.
+
+-----------------------------------------
+BRANDING
+-----------------------------------------
+
+Strengthen SCMS branding.
+
+Ensure consistent use of:
+
+SCMS
+
+Smart Civic Complaint Management System
+
+Use proper page titles.
+
+Improve browser page titles.
+
+Use the SCMS favicon everywhere.
+
+Keep branding professional and government-oriented.
+
+-----------------------------------------
+RESPONSIVENESS
+-----------------------------------------
+
+Review every page on:
+
+Desktop
+
+Tablet
+
+Mobile
+
+Ensure:
+
+• No overflow
+• Proper alignment
+• Responsive tables
+• Responsive charts
+• Responsive cards
+• Responsive forms
+• AI Dashboard works correctly on smaller screens
+
+-----------------------------------------
+PERFORMANCE
+-----------------------------------------
+
+Optimize performance without changing functionality.
+
+Review:
+
+• Unnecessary re-renders
+• Slow API calls
+• Duplicate requests
+• Loading states
+• Skeleton loaders
+• Caching
+• Lazy loading where appropriate
+
+Ensure smooth interactions throughout the application.
+
+-----------------------------------------
+ACCESSIBILITY
+-----------------------------------------
+
+Improve accessibility.
+
+Check:
+
+• Labels
+• Keyboard navigation
+• Focus states
+• Button accessibility
+• Color contrast
+• Screen reader friendliness
+
+-----------------------------------------
+ERROR HANDLING
+-----------------------------------------
+
+Improve user experience for failures.
+
+Ensure graceful handling of:
+
+• AI API unavailable
+• Network failures
+• Empty datasets
+• Missing images
+• GPS permission denied
+
+Display user-friendly messages.
+
+-----------------------------------------
+WORDING IMPROVEMENTS
+-----------------------------------------
+
+Review all text in the application.
+
+Replace technical or awkward wording with clear, professional language.
+
+Maintain a government portal tone.
+
+-----------------------------------------
+CODE QUALITY
+-----------------------------------------
+
+Review the project as a senior software engineer.
+
+Improve:
+
+• Code readability
+• Component organization
+• Reusable components
+• Naming consistency
+• Remove unused code
+• Remove duplicate logic
+
+Do not introduce regressions.
+
+-----------------------------------------
+FINAL QUALITY CHECK
+-----------------------------------------
+
+Before finishing:
+
+• Test every existing feature.
+• Ensure there are no console errors.
+• Ensure frontend and backend typechecks pass.
+• Ensure all AI responses remain grounded in real complaint data.
+• Verify mobile responsiveness.
+• Verify no existing functionality has been broken.
+
+The goal is not to add new functionality.
+
+The goal is to make SCMS feel like a polished, enterprise-grade AI-powered civic decision intelligence platform ready for demonstration in a national hackathon.

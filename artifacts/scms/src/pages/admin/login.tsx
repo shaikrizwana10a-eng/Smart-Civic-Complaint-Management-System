@@ -6,8 +6,10 @@ import { Label } from "@/components/ui/label";
 import { useAdminLogin } from "@workspace/api-client-react";
 import { motion } from "framer-motion";
 import { Building2, Loader2, ShieldCheck } from "lucide-react";
+import { useDocumentTitle } from "@/hooks/use-document-title";
 
 export default function AdminLogin() {
+  useDocumentTitle("Admin Login");
   const [, setLocation] = useLocation();
   const login = useAdminLogin();
   const [form, setForm] = useState({ username: "", password: "" });
