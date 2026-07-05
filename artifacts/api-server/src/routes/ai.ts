@@ -75,19 +75,19 @@ function buildNarrativePrompt(digest: {
   trend: { monthly: Awaited<ReturnType<typeof getMonthlyTrendRaw>>; direction: string; forecastNextMonth: number };
   departmentMapping: ReturnType<typeof computeDepartmentMapping>;
 }): string {
-  return `You are a civic administration analyst assistant. You are given ONLY the following real, aggregated statistics about complaints filed with a municipal complaint system. Do NOT invent any facts, numbers, areas, or categories that are not present in this data.
+  return `You are a senior civic operations analyst briefing a municipal commissioner. You are given ONLY the following real, aggregated statistics about complaints filed with a municipal complaint system. Do NOT invent any facts, numbers, areas, or categories that are not present in this data. Never use vague filler like "various issues" or "several areas" — always name the specific area, category, or number from the data.
 
 DATA:
 ${JSON.stringify(digest, null, 2)}
 
 Based STRICTLY on this data, respond with a JSON object matching this exact shape:
 {
-  "summary": "a concise 2-4 sentence executive summary of the current complaint situation",
-  "recommendations": ["3 to 5 short, specific, actionable recommendations for administrators, each referencing real areas/categories from the data"],
-  "predictions": "a 1-3 sentence forward-looking prediction about complaint volume/trends, referencing the forecastNextMonth number and direction given"
+  "summary": "a crisp 2-4 sentence executive summary written like a briefing note: lead with the single most important fact (a specific number, area, or risk), then context. Plain, confident, decision-maker tone — no hedging, no generic filler.",
+  "recommendations": ["3 to 5 recommendations ranked by urgency (most urgent first), each one sentence, each naming a specific area/category/count from the data and a concrete action an administrator can take this week (e.g. reassign staff, escalate to a named department, inspect a specific site) — not generic advice like 'improve response times'"],
+  "predictions": "a 1-3 sentence forward-looking prediction that explicitly cites the forecastNextMonth number and direction, and calls out one specific risk or opportunity implied by the trend"
 }
 
-Respond with ONLY the JSON object, no markdown formatting.`;
+Write for a busy official skimming on a phone: short sentences, concrete nouns, no jargon, no markdown. Respond with ONLY the JSON object.`;
 }
 
 function buildAnalysisPrompt(rows: ComplaintRow[]): string {
@@ -113,7 +113,7 @@ Analyze this data and respond with a JSON object matching this exact shape:
   "similarGroups": [{"complaintIds": ["<2 or more ids from the list that describe a very similar issue>"], "reason": "why they are similar"}]
 }
 
-Only include a "severities" entry for complaints where description content clearly indicates elevated risk (skip routine/low-risk ones or include with Low severity). Limit patterns to at most 5 and similarGroups to at most 5. Respond with ONLY the JSON object, no markdown formatting.`;
+Only include a "severities" entry for complaints where description content clearly indicates elevated risk (skip routine/low-risk ones or include with Low severity). Reasons must be one short clause citing the actual keyword or fact from the description that drove the rating (e.g. "mentions live wire near a school"), never a generic statement. Limit patterns to at most 5 and similarGroups to at most 5 — only report patterns/groups with genuine, specific overlap (same defect type, same street, same recurring cause), not coincidental category matches. Respond with ONLY the JSON object, no markdown formatting.`;
 }
 
 async function buildInsights(): Promise<InsightsPayload> {
@@ -151,9 +151,10 @@ async function buildInsights(): Promise<InsightsPayload> {
           trend: { monthly, direction, forecastNextMonth },
           departmentMapping,
         }),
+        0.3,
       ),
       openRows.length > 0
-        ? generateJson<unknown>(buildAnalysisPrompt(openRows))
+        ? generateJson<unknown>(buildAnalysisPrompt(openRows), 0.4)
         : Promise.resolve({ severities: [], patterns: [], similarGroups: [] }),
     ]);
 
@@ -256,7 +257,7 @@ router.post("/ai/ask", async (req, res): Promise<void> => {
         createdAt: r.createdAt.toISOString(),
       }));
 
-    const prompt = `You are an AI assistant embedded in a municipal civic complaint management admin dashboard. You must answer the administrator's question using ONLY the real data provided below. If the data does not contain enough information to answer confidently, say so honestly instead of guessing. Never invent complaint IDs, areas, or numbers not present in the data.
+    const prompt = `You are an AI assistant embedded in a municipal civic complaint management admin dashboard, speaking directly to the administrator. You must answer using ONLY the real data provided below. If the data does not contain enough information to answer confidently, say so plainly instead of guessing — never invent complaint IDs, areas, or numbers not present in the data.
 
 DATA:
 ${JSON.stringify(
@@ -267,12 +268,12 @@ ${JSON.stringify(
 
 ADMINISTRATOR QUESTION: ${parseResult.data.question}
 
-Respond with a concise, helpful, plain-text answer (no markdown headers, 2-6 sentences unless a list is clearly needed).`;
+Answer directly in the first sentence — lead with the number, area, or fact that answers the question, then add supporting detail. Cite specific complaint IDs, areas, or counts from the data whenever relevant. Plain text only, no markdown headers or bullet symbols; use a short list only if the question explicitly asks for a ranking. Keep it tight: 2-6 sentences.`;
 
     const response = await geminiClient.models.generateContent({
       model: AI_MODEL,
       contents: [{ role: "user", parts: [{ text: prompt }] }],
-      config: { maxOutputTokens: 8192 },
+      config: { maxOutputTokens: 8192, temperature: 0.4 },
     });
 
     const answer = response.text?.trim();

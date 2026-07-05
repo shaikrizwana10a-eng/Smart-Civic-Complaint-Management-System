@@ -19,7 +19,7 @@ export const AI_MODEL = "gemini-2.5-flash";
  * Calls Gemini asking for a JSON response and parses it.
  * Throws if Gemini is not configured, the call fails, or the response is not valid JSON.
  */
-export async function generateJson<T>(prompt: string): Promise<T> {
+export async function generateJson<T>(prompt: string, temperature = 0.5): Promise<T> {
   if (!ai) {
     throw new Error("Gemini AI client is not configured (missing GEMINI_API_KEY).");
   }
@@ -30,6 +30,7 @@ export async function generateJson<T>(prompt: string): Promise<T> {
     config: {
       responseMimeType: "application/json",
       maxOutputTokens: 8192,
+      temperature,
     },
   });
 
