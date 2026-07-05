@@ -63,15 +63,21 @@ router.get("/complaints", async (req, res): Promise<void> => {
 });
 
 router.post("/complaints", async (req, res): Promise<void> => {
-  const parsed = CreateComplaintBody.safeParse(req.body);
-  if (!parsed.success) {
-    res.status(400).json({ error: parsed.error.message });
-    return;
-  }
-
-  const complaintId = await generateComplaintId();
+  console.log("POST /complaints called");
+  console.log("Request body:", req.body);
 
   try {
+    const parsed = CreateComplaintBody.safeParse(req.body);
+
+    if (!parsed.success) {
+      console.error("Validation failed:", parsed.error);
+      res.status(400).json({ error: parsed.error.message });
+      return;
+    }
+
+    const complaintId = await generateComplaintId();
+    console.log("Generated complaint ID:", complaintId);
+
     const [complaint] = await db
       .insert(complaintsTable)
       .values({
@@ -81,6 +87,8 @@ router.post("/complaints", async (req, res): Promise<void> => {
         status: "Pending",
       })
       .returning();
+
+    console.log("Insert successful:", complaint);
 
     if (complaint.email) {
       await sendComplaintConfirmation(
@@ -92,13 +100,15 @@ router.post("/complaints", async (req, res): Promise<void> => {
 
     res.status(201).json(complaint);
   } catch (err) {
-    console.error("DATABASE ERROR:", err);
+    console.error("========== DATABASE ERROR ==========");
+    console.error(err);
+    console.error("===================================");
+
     res.status(500).json({
-      error: err instanceof Error ? err.message : String(err),
+      error: String(err),
     });
   }
 });
-
 router.get(
   "/complaints/track/:complaintId",
   async (req, res): Promise<void> => {
