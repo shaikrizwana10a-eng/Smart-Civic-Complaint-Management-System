@@ -3,3 +3,5 @@
 - [Priority + email DB columns](priority-email-columns.md) — both added to complaintsTable; email is nullable (existing rows); priority defaults to "Medium".
 - [SCMS Orval mutation hooks](scms-orval-hooks.md) — generated mutation hooks take flat `{ id, data }`, not `{ params: { id }, data }`.
 - [SCMS openapi.yaml formatting](scms-openapi-yaml-quirks.md) — spec has inconsistent property indentation in places that still parses fine; don't "fix" it incidentally while editing nearby fields.
+- [Gemini via own API key, not Replit AI Integrations](gemini-own-key-setup.md) — this project's Replit account can't use the AI Integrations proxy (needs paid upgrade); uses @google/genai with user-provided GEMINI_API_KEY secret instead.
+- [Orval schema name collisions](orval-schema-collision.md) — an OpenAPI schema literally named `<OperationId>Response`/`<OperationId>Body` collides with Orval's auto-generated response/body type of the same name; rename the schema.

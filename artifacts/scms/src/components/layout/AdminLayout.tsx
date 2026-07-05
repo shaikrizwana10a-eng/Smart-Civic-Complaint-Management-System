@@ -5,7 +5,8 @@ import {
   ListTodo, 
   LogOut, 
   Building2,
-  Menu
+  Menu,
+  Sparkles
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -55,6 +56,19 @@ export function AdminLayout({ children }: { children: ReactNode }) {
   >
     <Building2 className="h-4 w-4" />
     Area Insights
+  </Button>
+</Link>
+<Link href="/admin/ai-dashboard">
+  <Button
+    variant={
+      location === "/admin/ai-dashboard"
+        ? "secondary"
+        : "ghost"
+    }
+    className="w-full justify-start gap-3"
+  >
+    <Sparkles className="h-4 w-4" />
+    AI Decision Dashboard
   </Button>
 </Link>
  </>

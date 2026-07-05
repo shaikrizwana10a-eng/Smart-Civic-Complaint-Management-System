@@ -140,6 +140,115 @@ export interface SuccessResponse {
   success: boolean;
 }
 
+export type AiHotspotRiskLevel = typeof AiHotspotRiskLevel[keyof typeof AiHotspotRiskLevel];
+
+
+export const AiHotspotRiskLevel = {
+  Low: 'Low',
+  Medium: 'Medium',
+  High: 'High',
+  Critical: 'Critical',
+} as const;
+
+export interface AiHotspot {
+  area: string;
+  total: number;
+  pending: number;
+  topCategory: string;
+  riskLevel: AiHotspotRiskLevel;
+}
+
+export interface AiPriorityRecommendation {
+  complaintId: string;
+  area: string;
+  category: string;
+  currentPriority: string;
+  recommendedPriority: string;
+  reason: string;
+}
+
+export type AiTrendDirection = typeof AiTrendDirection[keyof typeof AiTrendDirection];
+
+
+export const AiTrendDirection = {
+  up: 'up',
+  down: 'down',
+  stable: 'stable',
+} as const;
+
+export interface AiTrend {
+  monthly: MonthlyCount[];
+  direction: AiTrendDirection;
+  forecastNextMonth: number;
+}
+
+export interface AiAreaAnalytics {
+  area: string;
+  total: number;
+  pending: number;
+  inProgress: number;
+  resolved: number;
+  avgPendingAgeDays: number;
+}
+
+export interface AiDepartmentMapping {
+  department: string;
+  category: string;
+  count: number;
+}
+
+export type AiSeveritySeverity = typeof AiSeveritySeverity[keyof typeof AiSeveritySeverity];
+
+
+export const AiSeveritySeverity = {
+  Low: 'Low',
+  Medium: 'Medium',
+  High: 'High',
+  Critical: 'Critical',
+} as const;
+
+export interface AiSeverity {
+  complaintId: string;
+  severity: AiSeveritySeverity;
+  reason: string;
+}
+
+export interface AiPattern {
+  title: string;
+  description: string;
+  complaintIds: string[];
+}
+
+export interface AiSimilarGroup {
+  complaintIds: string[];
+  reason: string;
+}
+
+export interface AiInsights {
+  summary: string;
+  recommendations: string[];
+  predictions: string;
+  hotspots: AiHotspot[];
+  priorityRecommendations: AiPriorityRecommendation[];
+  trend: AiTrend;
+  areaAnalytics: AiAreaAnalytics[];
+  departmentMapping: AiDepartmentMapping[];
+  severityAnalysis: AiSeverity[];
+  patterns: AiPattern[];
+  similarGroups: AiSimilarGroup[];
+  generatedAt: string;
+  cached: boolean;
+}
+
+export interface AiAskQuestion {
+  /** @minLength 3 */
+  question: string;
+}
+
+export interface AiAskAnswer {
+  answer: string;
+}
+
 export type ListComplaintsParams = {
 status?: ListComplaintsStatus;
 category?: string;
@@ -166,4 +275,8 @@ export const ListComplaintsPriority = {
   High: 'High',
   Urgent: 'Urgent',
 } as const;
+
+export type GetAiInsightsParams = {
+refresh?: boolean;
+};
 

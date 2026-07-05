@@ -263,3 +263,85 @@ export const GetRecentComplaintsResponseItem = zod.object({
 export const GetRecentComplaintsResponse = zod.array(GetRecentComplaintsResponseItem)
 
 
+/**
+ * @summary Get AI-generated decision intelligence insights for the admin dashboard
+ */
+export const GetAiInsightsQueryParams = zod.object({
+  "refresh": zod.coerce.boolean().optional()
+})
+
+export const GetAiInsightsResponse = zod.object({
+  "summary": zod.string(),
+  "recommendations": zod.array(zod.string()),
+  "predictions": zod.string(),
+  "hotspots": zod.array(zod.object({
+  "area": zod.string(),
+  "total": zod.number(),
+  "pending": zod.number(),
+  "topCategory": zod.string(),
+  "riskLevel": zod.enum(['Low', 'Medium', 'High', 'Critical'])
+})),
+  "priorityRecommendations": zod.array(zod.object({
+  "complaintId": zod.string(),
+  "area": zod.string(),
+  "category": zod.string(),
+  "currentPriority": zod.string(),
+  "recommendedPriority": zod.string(),
+  "reason": zod.string()
+})),
+  "trend": zod.object({
+  "monthly": zod.array(zod.object({
+  "month": zod.string(),
+  "count": zod.number()
+})),
+  "direction": zod.enum(['up', 'down', 'stable']),
+  "forecastNextMonth": zod.number()
+}),
+  "areaAnalytics": zod.array(zod.object({
+  "area": zod.string(),
+  "total": zod.number(),
+  "pending": zod.number(),
+  "inProgress": zod.number(),
+  "resolved": zod.number(),
+  "avgPendingAgeDays": zod.number()
+})),
+  "departmentMapping": zod.array(zod.object({
+  "department": zod.string(),
+  "category": zod.string(),
+  "count": zod.number()
+})),
+  "severityAnalysis": zod.array(zod.object({
+  "complaintId": zod.string(),
+  "severity": zod.enum(['Low', 'Medium', 'High', 'Critical']),
+  "reason": zod.string()
+})),
+  "patterns": zod.array(zod.object({
+  "title": zod.string(),
+  "description": zod.string(),
+  "complaintIds": zod.array(zod.string())
+})),
+  "similarGroups": zod.array(zod.object({
+  "complaintIds": zod.array(zod.string()),
+  "reason": zod.string()
+})),
+  "generatedAt": zod.coerce.date(),
+  "cached": zod.boolean()
+})
+
+
+/**
+ * @summary Ask the AI assistant a natural-language question grounded in complaint data
+ */
+export const askAiBodyQuestionMin = 3;
+
+
+
+export const AskAiBody = zod.object({
+  "question": zod.string().min(askAiBodyQuestionMin)
+})
+
+export const AskAiResponse = zod.object({
+  "answer": zod.string()
+})
+
+

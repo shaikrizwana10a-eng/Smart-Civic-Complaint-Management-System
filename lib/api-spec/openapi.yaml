@@ -339,6 +339,56 @@ paths:
                 items:
                   $ref: "#/components/schemas/Complaint"
 
+  /ai/insights:
+    get:
+      operationId: getAiInsights
+      tags: [ai]
+      summary: Get AI-generated decision intelligence insights for the admin dashboard
+      parameters:
+        - name: refresh
+          in: query
+          required: false
+          schema:
+            type: boolean
+      responses:
+        "200":
+          description: AI insights
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AiInsights"
+        "503":
+          description: AI service unavailable
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /ai/ask:
+    post:
+      operationId: askAi
+      tags: [ai]
+      summary: Ask the AI assistant a natural-language question grounded in complaint data
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AiAskQuestion"
+      responses:
+        "200":
+          description: AI answer
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AiAskAnswer"
+        "503":
+          description: AI service unavailable
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
 components:
   schemas:
     HealthStatus:
@@ -519,3 +569,190 @@ components:
       properties:
         success:
           type: boolean
+
+    AiHotspot:
+      type: object
+      required: [area, total, pending, topCategory, riskLevel]
+      properties:
+        area:
+          type: string
+        total:
+          type: integer
+        pending:
+          type: integer
+        topCategory:
+          type: string
+        riskLevel:
+          type: string
+          enum: [Low, Medium, High, Critical]
+
+    AiPriorityRecommendation:
+      type: object
+      required: [complaintId, area, category, currentPriority, recommendedPriority, reason]
+      properties:
+        complaintId:
+          type: string
+        area:
+          type: string
+        category:
+          type: string
+        currentPriority:
+          type: string
+        recommendedPriority:
+          type: string
+        reason:
+          type: string
+
+    AiTrend:
+      type: object
+      required: [monthly, direction, forecastNextMonth]
+      properties:
+        monthly:
+          type: array
+          items:
+            $ref: "#/components/schemas/MonthlyCount"
+        direction:
+          type: string
+          enum: [up, down, stable]
+        forecastNextMonth:
+          type: integer
+
+    AiAreaAnalytics:
+      type: object
+      required: [area, total, pending, inProgress, resolved, avgPendingAgeDays]
+      properties:
+        area:
+          type: string
+        total:
+          type: integer
+        pending:
+          type: integer
+        inProgress:
+          type: integer
+        resolved:
+          type: integer
+        avgPendingAgeDays:
+          type: number
+
+    AiDepartmentMapping:
+      type: object
+      required: [department, category, count]
+      properties:
+        department:
+          type: string
+        category:
+          type: string
+        count:
+          type: integer
+
+    AiSeverity:
+      type: object
+      required: [complaintId, severity, reason]
+      properties:
+        complaintId:
+          type: string
+        severity:
+          type: string
+          enum: [Low, Medium, High, Critical]
+        reason:
+          type: string
+
+    AiPattern:
+      type: object
+      required: [title, description, complaintIds]
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        complaintIds:
+          type: array
+          items:
+            type: string
+
+    AiSimilarGroup:
+      type: object
+      required: [complaintIds, reason]
+      properties:
+        complaintIds:
+          type: array
+          items:
+            type: string
+        reason:
+          type: string
+
+    AiInsights:
+      type: object
+      required:
+        - summary
+        - recommendations
+        - predictions
+        - hotspots
+        - priorityRecommendations
+        - trend
+        - areaAnalytics
+        - departmentMapping
+        - severityAnalysis
+        - patterns
+        - similarGroups
+        - generatedAt
+        - cached
+      properties:
+        summary:
+          type: string
+        recommendations:
+          type: array
+          items:
+            type: string
+        predictions:
+          type: string
+        hotspots:
+          type: array
+          items:
+            $ref: "#/components/schemas/AiHotspot"
+        priorityRecommendations:
+          type: array
+          items:
+            $ref: "#/components/schemas/AiPriorityRecommendation"
+        trend:
+          $ref: "#/components/schemas/AiTrend"
+        areaAnalytics:
+          type: array
+          items:
+            $ref: "#/components/schemas/AiAreaAnalytics"
+        departmentMapping:
+          type: array
+          items:
+            $ref: "#/components/schemas/AiDepartmentMapping"
+        severityAnalysis:
+          type: array
+          items:
+            $ref: "#/components/schemas/AiSeverity"
+        patterns:
+          type: array
+          items:
+            $ref: "#/components/schemas/AiPattern"
+        similarGroups:
+          type: array
+          items:
+            $ref: "#/components/schemas/AiSimilarGroup"
+        generatedAt:
+          type: string
+          format: date-time
+        cached:
+          type: boolean
+
+    AiAskQuestion:
+      type: object
+      required: [question]
+      properties:
+        question:
+          type: string
+          minLength: 3
+
+    AiAskAnswer:
+      type: object
+      required: [answer]
+      properties:
+        answer:
+          type: string

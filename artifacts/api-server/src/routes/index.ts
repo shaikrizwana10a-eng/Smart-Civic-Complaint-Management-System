@@ -4,6 +4,7 @@ import complaintsRouter from "./complaints";
 import adminRouter from "./admin";
 import analyticsRouter from "./analytics";
 import uploadRouter from "./upload";
+import aiRouter from "./ai";
 
 const router: IRouter = Router();
 
@@ -12,5 +13,6 @@ router.use(complaintsRouter);
 router.use(adminRouter);
 router.use(analyticsRouter);
 router.use(uploadRouter);
+router.use(aiRouter);
 
 export default router;

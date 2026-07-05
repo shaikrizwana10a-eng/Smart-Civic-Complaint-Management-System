@@ -11,6 +11,7 @@ import AdminLogin from "@/pages/admin/login";
 import AdminDashboard from "@/pages/admin/dashboard";
 import AdminComplaints from "@/pages/admin/complaints";
 import AreaInsights from "@/pages/admin/area-insights";
+import AiDashboard from "@/pages/admin/ai-dashboard";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -31,6 +32,7 @@ function Router() {
       <Route path="/admin" component={AdminDashboard} />
       <Route path="/admin/complaints" component={AdminComplaints} />
       <Route path="/admin/area-insights" component={AreaInsights} />
+      <Route path="/admin/ai-dashboard" component={AiDashboard} />
       <Route component={NotFound} />
     </Switch>
   );

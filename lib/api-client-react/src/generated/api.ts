@@ -22,12 +22,16 @@ import type {
 import type {
   AdminCredentials,
   AdminSession,
+  AiAskAnswer,
+  AiAskQuestion,
+  AiInsights,
   CategoryCount,
   Complaint,
   ComplaintInput,
   ComplaintStats,
   ComplaintUpdate,
   ErrorResponse,
+  GetAiInsightsParams,
   HealthStatus,
   ListComplaintsParams,
   MonthlyCount,
@@ -1255,4 +1259,159 @@ export function useGetRecentComplaints<TData = Awaited<ReturnType<typeof getRece
 
 
 
+
+export const getGetAiInsightsUrl = (params?: GetAiInsightsParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/ai/insights?${stringifiedParams}` : `/api/ai/insights`
+}
+
+/**
+ * @summary Get AI-generated decision intelligence insights for the admin dashboard
+ */
+export const getAiInsights = async (params?: GetAiInsightsParams, options?: RequestInit): Promise<AiInsights> => {
+
+  return customFetch<AiInsights>(getGetAiInsightsUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetAiInsightsQueryKey = (params?: GetAiInsightsParams,) => {
+    return [
+    `/api/ai/insights`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getGetAiInsightsQueryOptions = <TData = Awaited<ReturnType<typeof getAiInsights>>, TError = ErrorType<ErrorResponse>>(params?: GetAiInsightsParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getAiInsights>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetAiInsightsQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getAiInsights>>> = ({ signal }) => getAiInsights(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getAiInsights>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetAiInsightsQueryResult = NonNullable<Awaited<ReturnType<typeof getAiInsights>>>
+export type GetAiInsightsQueryError = ErrorType<ErrorResponse>
+
+
+/**
+ * @summary Get AI-generated decision intelligence insights for the admin dashboard
+ */
+
+export function useGetAiInsights<TData = Awaited<ReturnType<typeof getAiInsights>>, TError = ErrorType<ErrorResponse>>(
+ params?: GetAiInsightsParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getAiInsights>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetAiInsightsQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getAskAiUrl = () => {
+
+
+
+
+  return `/api/ai/ask`
+}
+
+/**
+ * @summary Ask the AI assistant a natural-language question grounded in complaint data
+ */
+export const askAi = async (aiAskQuestion: AiAskQuestion, options?: RequestInit): Promise<AiAskAnswer> => {
+
+  return customFetch<AiAskAnswer>(getAskAiUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      aiAskQuestion,)
+  }
+);}
+
+
+
+
+export const getAskAiMutationOptions = <TError = ErrorType<ErrorResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof askAi>>, TError,{data: BodyType<AiAskQuestion>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof askAi>>, TError,{data: BodyType<AiAskQuestion>}, TContext> => {
+
+const mutationKey = ['askAi'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof askAi>>, {data: BodyType<AiAskQuestion>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  askAi(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type AskAiMutationResult = NonNullable<Awaited<ReturnType<typeof askAi>>>
+    export type AskAiMutationBody = BodyType<AiAskQuestion>
+    export type AskAiMutationError = ErrorType<ErrorResponse>
+
+    /**
+ * @summary Ask the AI assistant a natural-language question grounded in complaint data
+ */
+export const useAskAi = <TError = ErrorType<ErrorResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof askAi>>, TError,{data: BodyType<AiAskQuestion>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof askAi>>,
+        TError,
+        {data: BodyType<AiAskQuestion>},
+        TContext
+      > => {
+      return useMutation(getAskAiMutationOptions(options));
+    }
 
