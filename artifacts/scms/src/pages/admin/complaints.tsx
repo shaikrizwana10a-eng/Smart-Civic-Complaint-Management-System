@@ -362,6 +362,7 @@ export default function AdminComplaints() {
                       "ID",
                       "Name",
                       "Area",
+                      "Location",
                       "Category",
                       "Priority",
                       "Status",
@@ -393,6 +394,8 @@ export default function AdminComplaints() {
                       priority: string;
                       createdAt: string;
                       imageUrl?: string | null;
+                      latitude?: number | null;
+                      longitude?: number | null;
                     };
                     return (
                       <motion.tr
@@ -417,6 +420,23 @@ export default function AdminComplaints() {
                         </td>
                         <td className="px-4 py-3 text-slate-600 whitespace-nowrap">
                           {c.area}
+                        </td>
+                        <td className="px-4 py-3 whitespace-nowrap">
+                          {c.latitude != null && c.longitude != null ? (
+                            <a
+                              href={`https://www.google.com/maps?q=${c.latitude},${c.longitude}`}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="text-xs font-mono text-blue-600 hover:underline"
+                              title="Open in Google Maps"
+                            >
+                              {c.latitude.toFixed(4)}, {c.longitude.toFixed(4)}
+                            </a>
+                          ) : (
+                            <span className="text-slate-400 text-xs">
+                              Not shared
+                            </span>
+                          )}
                         </td>
                         <td className="px-4 py-3 whitespace-nowrap">
                           <span className="bg-slate-100 text-slate-700 text-xs px-2 py-0.5 rounded">

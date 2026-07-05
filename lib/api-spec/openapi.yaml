@@ -382,6 +382,15 @@ components:
           
            nullable: true
 
+        latitude:
+          type: number
+          format: double
+          nullable: true
+        longitude:
+          type: number
+          format: double
+          nullable: true
+
         createdAt:
           type: string
           format: date-time
@@ -423,6 +432,14 @@ components:
         imageUrl:
             type: string
             format: uri
+        latitude:
+          type: number
+          format: double
+          nullable: true
+        longitude:
+          type: number
+          format: double
+          nullable: true
 
     ComplaintUpdate:
       type: object

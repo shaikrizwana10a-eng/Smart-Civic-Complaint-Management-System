@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/select";
 import { useCreateComplaint } from "@workspace/api-client-react";
 import { motion } from "framer-motion";
-import { CheckCircle, Download, FileText, ImageIcon, Loader2, UploadCloud, X } from "lucide-react";
+import { CheckCircle, Download, FileText, ImageIcon, Loader2, MapPin, UploadCloud, X } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 const CATEGORIES = [
@@ -61,6 +61,58 @@ export default function Register() {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
+
+  const [location, setLocation] = useState<{
+    latitude: number;
+    longitude: number;
+  } | null>(null);
+  const [isLocating, setIsLocating] = useState(false);
+  const [locationMessage, setLocationMessage] = useState<{
+    type: "success" | "error";
+    text: string;
+  } | null>(null);
+
+  function handleUseCurrentLocation() {
+    if (!navigator.geolocation) {
+      setLocationMessage({
+        type: "error",
+        text: "Unable to access your location. You can still submit your complaint.",
+      });
+      return;
+    }
+
+    setIsLocating(true);
+    setLocationMessage(null);
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setLocation({
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+        });
+        setLocationMessage({
+          type: "success",
+          text: "Location captured successfully.",
+        });
+        setIsLocating(false);
+      },
+      () => {
+        setLocation(null);
+        setLocationMessage({
+          type: "error",
+          text: "Unable to access your location. You can still submit your complaint.",
+        });
+        setIsLocating(false);
+      },
+      { enableHighAccuracy: true, timeout: 10000 },
+    );
+  }
+
+  function handleClearLocation() {
+    setLocation(null);
+    setLocationMessage(null);
+    setIsLocating(false);
+  }
 
   async function handleImageChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -151,6 +203,9 @@ export default function Register() {
           priority: form.priority as "Low" | "Medium" | "High" | "Urgent",
           description: form.description,
           ...(imageUrl ? { imageUrl } : {}),
+          ...(location
+            ? { latitude: location.latitude, longitude: location.longitude }
+            : {}),
         },
       },
       {
@@ -227,6 +282,7 @@ export default function Register() {
                     description: "",
                   });
                   handleRemoveImage();
+                  handleClearLocation();
                 }}
               >
                 Register Another Complaint
@@ -334,6 +390,57 @@ export default function Register() {
               />
               {errors.area && (
                 <p className="text-xs text-destructive">{errors.area}</p>
+              )}
+            </div>
+
+            <div className="space-y-2 rounded-xl border border-slate-200 bg-slate-50 p-4">
+              <Label className="flex items-center gap-1.5">
+                <MapPin className="h-3.5 w-3.5 text-slate-500" />
+                Current Location{" "}
+                <span className="text-slate-400 text-xs font-normal">
+                  (Optional)
+                </span>
+              </Label>
+              <p className="text-xs text-slate-500">
+                Sharing your precise location helps authorities locate the
+                issue faster.
+              </p>
+
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={handleUseCurrentLocation}
+                disabled={isLocating}
+                className="gap-2"
+              >
+                {isLocating ? (
+                  <>
+                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                    Locating…
+                  </>
+                ) : (
+                  <>📍 Use My Current Location</>
+                )}
+              </Button>
+
+              {location && (
+                <p className="text-xs text-slate-500 font-mono">
+                  {location.latitude.toFixed(6)}, {location.longitude.toFixed(6)}
+                </p>
+              )}
+
+              {locationMessage && (
+                <p
+                  className={`text-xs ${
+                    locationMessage.type === "success"
+                      ? "text-green-600"
+                      : "text-slate-500"
+                  }`}
+                >
+                  {locationMessage.type === "success" ? "✓ " : ""}
+                  {locationMessage.text}
+                </p>
               )}
             </div>
 

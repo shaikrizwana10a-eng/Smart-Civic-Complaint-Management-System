@@ -21,4 +21,6 @@ export interface ComplaintInput {
   description: string;
   priority: ComplaintInputPriority;
   imageUrl?: string;
+  latitude?: number | null;
+  longitude?: number | null;
 }

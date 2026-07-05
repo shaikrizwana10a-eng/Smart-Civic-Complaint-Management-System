@@ -1,5 +1,5 @@
 
-import { pgTable, serial, text, timestamp, integer } from "drizzle-orm/pg-core";
+import { pgTable, serial, text, timestamp, integer, doublePrecision } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod/v4";
 
@@ -15,6 +15,8 @@ export const complaintsTable = pgTable("complaints", {
   status: text("status").notNull().default("Pending"),
   priority: text("priority").notNull().default("Medium"),
   imageUrl: text("image_url"),
+  latitude: doublePrecision("latitude"),
+  longitude: doublePrecision("longitude"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 

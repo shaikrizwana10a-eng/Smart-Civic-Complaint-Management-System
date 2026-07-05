@@ -1,3 +1,5 @@
 - [Bcrypt admin auth](bcrypt-admin-auth.md) — admin password uses bcrypt; default hash of "admin123" hardcoded; override with ADMIN_PASSWORD_HASH env var.
 - [Email notifications](email-notifications.md) — nodemailer with graceful skip when SMTP env vars absent; fires on PATCH /complaints/:id status change.
 - [Priority + email DB columns](priority-email-columns.md) — both added to complaintsTable; email is nullable (existing rows); priority defaults to "Medium".
+- [SCMS Orval mutation hooks](scms-orval-hooks.md) — generated mutation hooks take flat `{ id, data }`, not `{ params: { id }, data }`.
+- [SCMS openapi.yaml formatting](scms-openapi-yaml-quirks.md) — spec has inconsistent property indentation in places that still parses fine; don't "fix" it incidentally while editing nearby fields.

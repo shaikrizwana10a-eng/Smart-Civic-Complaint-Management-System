@@ -40,6 +40,8 @@ export interface Complaint {
   status: ComplaintStatus;
   priority: ComplaintPriority;
   imageUrl?: string | null;
+  latitude?: number | null;
+  longitude?: number | null;
   createdAt: string;
 }
 
@@ -81,6 +83,8 @@ export interface ComplaintInput {
   description: string;
   priority: ComplaintInputPriority;
   imageUrl?: string;
+  latitude?: number | null;
+  longitude?: number | null;
 }
 
 export type ComplaintUpdateStatus = typeof ComplaintUpdateStatus[keyof typeof ComplaintUpdateStatus];

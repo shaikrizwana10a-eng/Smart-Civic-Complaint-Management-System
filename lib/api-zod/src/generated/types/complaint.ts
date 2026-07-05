@@ -20,5 +20,7 @@ export interface Complaint {
   status: ComplaintStatus;
   priority: ComplaintPriority;
   imageUrl?: string | null;
+  latitude?: number | null;
+  longitude?: number | null;
   createdAt: Date;
 }
