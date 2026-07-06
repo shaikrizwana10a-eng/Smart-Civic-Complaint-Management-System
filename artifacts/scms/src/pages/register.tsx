@@ -135,12 +135,29 @@ export default function Register() {
         body: formData,
       });
 
-      if (!res.ok) {
-        const err = await res.json().catch(() => ({}));
-        throw new Error((err as { error?: string }).error ?? "Upload failed");
+      const rawText = await res.text();
+      let parsed: unknown = null;
+      if (rawText) {
+        try {
+          parsed = JSON.parse(rawText);
+        } catch {
+          parsed = null;
+        }
       }
 
-      const data = (await res.json()) as { imageUrl: string };
+      if (!res.ok) {
+        const errorMessage =
+          parsed && typeof parsed === "object" && "error" in parsed
+            ? String((parsed as { error?: unknown }).error)
+            : `Upload failed (HTTP ${res.status})`;
+        throw new Error(errorMessage);
+      }
+
+      if (!parsed || typeof parsed !== "object" || !("imageUrl" in parsed)) {
+        throw new Error("Upload succeeded but the server response was invalid.");
+      }
+
+      const data = parsed as { imageUrl: string };
       setImageUrl(data.imageUrl);
     } catch (err) {
       setUploadError(
