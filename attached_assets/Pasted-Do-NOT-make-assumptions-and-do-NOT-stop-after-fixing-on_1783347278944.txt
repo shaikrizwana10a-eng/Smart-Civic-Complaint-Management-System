@@ -1,0 +1,168 @@
+Do NOT make assumptions and do NOT stop after fixing one issue.
+
+I want you to perform a complete end-to-end verification of my Smart Civic Complaint Management System (SCMS).
+
+Background:
+- The project worked before.
+- I recently added AI Dashboard, AI Hotspot Analysis, AI Insights, AI Assistant, image upload, and other AI-related features.
+- After those changes, complaint registration and website functionality started failing.
+- You previously fixed a validation/logging issue.
+
+I do NOT want another theoretical explanation.
+
+I want proof that the entire application is working correctly.
+
+### Step 1: Verify every backend endpoint
+
+Test every endpoint using real requests.
+
+Check:
+
+- GET /api/complaints
+- POST /api/complaints
+- GET /api/complaints/:id
+- GET /api/complaints/track/:complaintId
+- PATCH /api/complaints/:id
+- DELETE /api/complaints/:id
+- PDF download endpoint
+- Upload endpoint
+- Admin endpoints
+- Analytics endpoints
+- AI endpoints
+
+For each endpoint provide:
+
+- Request payload
+- Response
+- HTTP status
+- Whether it passed or failed
+
+Do not skip any endpoint.
+
+------------------------------------------------
+
+### Step 2: Verify frontend
+
+Inspect the frontend complaint registration form.
+
+Check:
+
+- Is every required field being sent?
+- Is priority always included?
+- Is category valid?
+- Is image upload correct?
+- Is location data correct?
+- Does the frontend send the exact payload expected by CreateComplaintBody?
+
+If anything is wrong,
+identify:
+
+- exact file
+- exact line
+- corrected code
+
+------------------------------------------------
+
+### Step 3: Verify database
+
+Compare:
+
+- Drizzle schema
+- PostgreSQL schema
+- OpenAPI schema
+- Zod schema
+
+Confirm they are completely synchronized.
+
+If not:
+
+- list every mismatch
+- explain impact
+- provide corrected code
+
+------------------------------------------------
+
+### Step 4: Verify recent AI additions
+
+Check whether any of these modules indirectly affect complaint registration:
+
+- AI Dashboard
+- AI Insights
+- AI Hotspots
+- AI Assistant
+- Gemini integration
+- Image upload
+- Analytics
+
+Trace imports and dependencies.
+
+Confirm whether any shared module can break complaint APIs.
+
+------------------------------------------------
+
+### Step 5: Verify deployment
+
+Check production configuration.
+
+Verify:
+
+- Render
+- Environment variables
+- Cloudinary
+- Gmail
+- Database connection
+- API URLs
+
+------------------------------------------------
+
+### Step 6: Search for hidden runtime issues
+
+Search the entire project for:
+
+- unhandled promise rejections
+- console.error that can throw
+- circular imports
+- undefined property access
+- unsafe optional chaining
+- async errors
+- middleware issues
+- Express error handlers
+- Zod validation problems
+
+------------------------------------------------
+
+### Step 7: Run full project validation
+
+Run:
+
+- typecheck
+- build
+- API verification
+- frontend verification
+
+Confirm there are:
+
+- no runtime errors
+- no failing endpoints
+- no broken imports
+
+------------------------------------------------
+
+### Final report
+
+Do NOT simply say "everything works."
+
+Produce a report containing:
+
+1. Every issue found
+2. Exact file
+3. Exact line number
+4. Root cause
+5. Code before
+6. Code after
+7. Why the fix works
+8. Any remaining risks
+9. Manual testing checklist
+10. Whether the project is production-ready.
+
+If you claim an issue is fixed, provide evidence (test results or successful endpoint responses). Do not assume success without verification.

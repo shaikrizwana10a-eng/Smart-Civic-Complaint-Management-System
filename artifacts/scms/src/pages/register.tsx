@@ -130,7 +130,7 @@ export default function Register() {
       const formData = new FormData();
       formData.append("image", file);
 
-      const res = await fetch("/api/upload-image", {
+      const res = await fetch(`${import.meta.env.BASE_URL}api/upload-image`, {
         method: "POST",
         body: formData,
       });
