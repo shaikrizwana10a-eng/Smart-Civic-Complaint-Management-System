@@ -136,6 +136,7 @@ export default function Register() {
       });
 
       const rawText = await res.text();
+      console.log("RAW RESPONSE:", rawText);
       let parsed: unknown = null;
       if (rawText) {
         try {
