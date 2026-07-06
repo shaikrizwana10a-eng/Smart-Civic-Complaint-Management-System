@@ -27,7 +27,7 @@ router.post(
         imageUrl: result.secure_url,
       });
     } catch (error) {
-      console.error(error);
+      req.log.error({ err: error }, "Failed to upload image");
       res.status(500).json({
         error: "Failed to upload image",
       });

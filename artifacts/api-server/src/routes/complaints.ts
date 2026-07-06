@@ -63,20 +63,16 @@ router.get("/complaints", async (req, res): Promise<void> => {
 });
 
 router.post("/complaints", async (req, res): Promise<void> => {
-  console.log("POST /complaints called");
-  console.log("Request body:", req.body);
+  const parsed = CreateComplaintBody.safeParse(req.body);
+
+  if (!parsed.success) {
+    req.log.warn({ issues: parsed.error.issues }, "Complaint validation failed");
+    res.status(400).json({ error: parsed.error.message });
+    return;
+  }
 
   try {
-    const parsed = CreateComplaintBody.safeParse(req.body);
-
-    if (!parsed.success) {
-      console.error("Validation failed:", parsed.error);
-      res.status(400).json({ error: parsed.error.message });
-      return;
-    }
-
     const complaintId = await generateComplaintId();
-    console.log("Generated complaint ID:", complaintId);
 
     const [complaint] = await db
       .insert(complaintsTable)
@@ -88,7 +84,7 @@ router.post("/complaints", async (req, res): Promise<void> => {
       })
       .returning();
 
-    console.log("Insert successful:", complaint);
+    req.log.info({ complaintId: complaint.complaintId }, "Complaint created");
 
     if (complaint.email) {
       await sendComplaintConfirmation(
@@ -100,13 +96,8 @@ router.post("/complaints", async (req, res): Promise<void> => {
 
     res.status(201).json(complaint);
   } catch (err) {
-    console.error("========== DATABASE ERROR ==========");
-    console.error(err);
-    console.error("===================================");
-
-    res.status(500).json({
-      error: String(err),
-    });
+    req.log.error({ err }, "Failed to create complaint");
+    res.status(500).json({ error: "Failed to create complaint" });
   }
 });
 router.get(

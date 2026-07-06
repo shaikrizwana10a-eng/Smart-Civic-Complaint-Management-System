@@ -1,0 +1,78 @@
+Perform a complete root cause analysis of my Smart Civic Complaint Management System (SCMS) project.
+
+Context:
+- The project was working correctly before.
+- Recently, I added several new features including:
+  - AI Dashboard
+  - AI Hotspot Analysis
+  - AI Insights
+  - AI Assistant
+  - Image upload support
+  - Other recent AI-related features.
+- After these additions, the application started failing.
+
+Current issues:
+1. The website sometimes fails to load correctly.
+2. Submitting a complaint returns HTTP 500 Internal Server Error.
+3. GET /api/complaints also returns HTTP 500.
+4. The backend starts successfully on Render.
+5. The complaints table exists in PostgreSQL and contains these columns:
+   id,
+   complaint_id,
+   name,
+   email,
+   mobile,
+   area,
+   category,
+   description,
+   status,
+   priority,
+   created_at,
+   image_url.
+6. The frontend successfully reaches the backend.
+7. The backend route executes, but the database query fails.
+8. This started only after the recent AI feature additions.
+
+I do NOT want guesses.
+
+I want you to inspect the entire project and determine the exact root cause.
+
+Please check all of the following:
+
+1. Compare the current database schema with the Drizzle schema.
+2. Verify all migrations have been applied correctly.
+3. Check every recent commit for breaking changes.
+4. Inspect complaintsTable, complaintCounterTable and all related schemas.
+5. Verify all API routes under artifacts/api-server/src/routes.
+6. Check if AI Dashboard changes accidentally affected complaint APIs.
+7. Verify OpenAPI-generated types are synchronized.
+8. Verify @workspace/db exports match the actual schema.
+9. Check for missing environment variables.
+10. Check for broken imports or circular dependencies.
+11. Check Cloudinary/image upload integration.
+12. Verify middleware order.
+13. Verify Zod validation matches the database schema.
+14. Check whether any new code throws before the database insert.
+15. Inspect global Express error handlers.
+16. Verify Render production configuration.
+17. Compare development vs production behavior.
+18. Check if complaint creation or retrieval is failing because of AI-related imports or initialization.
+19. Check whether Gemini/OpenAI initialization blocks the application.
+20. Verify every recent change related to AI modules did not unintentionally affect the complaint module.
+
+For every issue you find:
+- Explain WHY it happens.
+- Identify the exact file and line number.
+- Explain how it affects the application.
+- Provide the corrected code.
+- Explain why the fix works.
+
+Do not stop after finding one issue.
+Continue until you have checked the entire project and list every bug or misconfiguration you discover.
+
+Finally, provide:
+1. Root Cause Summary
+2. Files to Modify
+3. Exact Code Changes
+4. Deployment Steps
+5. Verification Checklist to ensure complaint registration, admin dashboard, AI dashboard, analytics, image upload, and tracking all work correctly.
