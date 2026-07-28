@@ -293,7 +293,7 @@ export default function Register() {
                 </p>
               </div>
               <a
-                href={`${import.meta.env.BASE_URL}api/complaints/${submitted.id}/pdf`}
+                href={`${import.meta.env.VITE_API_URL}api/complaints/${submitted.id}/pdf`}
                 target="_blank"
                 rel="noreferrer"
                 className="w-full"
