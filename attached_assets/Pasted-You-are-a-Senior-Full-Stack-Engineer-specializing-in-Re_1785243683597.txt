@@ -1,0 +1,177 @@
+You are a Senior Full Stack Engineer specializing in React, TypeScript, Vite, Express, Node.js, PostgreSQL, Drizzle ORM, and Render deployments.
+
+My Smart Civic Complaint Management System (SCMS) was fully working before I added several new features. Now the website only shows a completely blank white screen.
+
+Your job is NOT to rewrite or redesign my project.
+
+Your ONLY objective is to identify and fix the actual root cause(s) of the blank screen.
+
+STRICT RULES:
+
+- Do NOT create a new project.
+- Do NOT remove any existing feature.
+- Do NOT replace technologies.
+- Do NOT simplify the application.
+- Do NOT make random changes.
+- Investigate first, then fix only what is necessary.
+- Do NOT stop after fixing the first error. Continue until the application works correctly.
+
+STEP 1:
+Run the project and inspect:
+
+- Browser Console
+- Terminal Output
+- Vite Build Logs
+- Server Logs
+- Network Tab
+
+Find every error before changing any code.
+
+STEP 2:
+Trace the application from startup.
+
+Check:
+
+main.tsx
+index.html
+App.tsx
+BrowserRouter
+All Routes
+Protected Routes
+Context Providers
+Theme Provider
+Authentication Provider
+Error Boundaries
+Lazy Imports
+Suspense
+Custom Hooks
+Component Imports
+Component Exports
+Circular Dependencies
+React Hooks
+useEffect loops
+Invalid JSX
+Runtime Exceptions
+
+STEP 3:
+Inspect backend.
+
+Check:
+
+Express startup
+Route registration
+Middleware order
+Authentication middleware
+JWT
+Cloudinary
+Multer
+Database connection
+Drizzle ORM
+Environment variables
+CORS
+API endpoints
+
+STEP 4:
+Inspect project configuration.
+
+Check:
+
+package.json
+pnpm workspace
+vite.config.ts
+tsconfig.json
+Render deployment settings
+Environment variables
+Import aliases
+Path aliases
+
+STEP 5:
+Search the ENTIRE project for:
+
+broken imports
+
+missing exports
+
+wrong default imports
+
+named import mistakes
+
+duplicate exports
+
+duplicate routes
+
+undefined variables
+
+null reference errors
+
+throw new Error()
+
+TODO
+
+FIXME
+
+console.error()
+
+return null
+
+STEP 6:
+For EVERY issue found, provide:
+
+1. File name
+
+2. Line number
+
+3. Root cause
+
+4. Why it causes the blank screen
+
+5. Exact code change
+
+6. Why the fix works
+
+STEP 7:
+Apply the fixes one by one.
+
+After each fix:
+
+Run the project again.
+
+If another error appears, continue debugging.
+
+Repeat until there are NO runtime errors.
+
+FINAL VERIFICATION:
+
+Confirm ALL of the following:
+
+✅ Frontend loads successfully
+
+✅ No blank screen
+
+✅ No runtime errors
+
+✅ No failed imports
+
+✅ No failed API requests
+
+✅ Login works
+
+✅ Register works
+
+✅ Complaint submission works
+
+✅ Image upload works
+
+✅ Dashboard works
+
+✅ Admin pages work
+
+✅ Analytics work
+
+✅ Production build succeeds
+
+Only stop after the application is completely functional.
+
+DO NOT GUESS.
+
+Always inspect the logs before modifying any code.
