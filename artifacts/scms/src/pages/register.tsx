@@ -13,7 +13,16 @@ import {
 } from "@/components/ui/select";
 import { useCreateComplaint } from "@workspace/api-client-react";
 import { motion } from "framer-motion";
-import { CheckCircle, Download, FileText, ImageIcon, Loader2, MapPin, UploadCloud, X } from "lucide-react";
+import {
+  CheckCircle,
+  Download,
+  FileText,
+  ImageIcon,
+  Loader2,
+  MapPin,
+  UploadCloud,
+  X,
+} from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useDocumentTitle } from "@/hooks/use-document-title";
 
@@ -130,7 +139,10 @@ export default function Register() {
       const formData = new FormData();
       formData.append("image", file);
 
-      const res = await fetch(`${import.meta.env.BASE_URL}api/upload-image`, {
+      const API_URL = import.meta.env.VITE_API_URL;
+      console.log("VITE_API_URL =", API_URL);
+
+      const res = await fetch(`${API_URL}/api/upload-image`, {
         method: "POST",
         body: formData,
       });
@@ -155,14 +167,18 @@ export default function Register() {
       }
 
       if (!parsed || typeof parsed !== "object" || !("imageUrl" in parsed)) {
-        throw new Error("Upload succeeded but the server response was invalid.");
+        throw new Error(
+          "Upload succeeded but the server response was invalid.",
+        );
       }
 
       const data = parsed as { imageUrl: string };
       setImageUrl(data.imageUrl);
     } catch (err) {
       setUploadError(
-        err instanceof Error ? err.message : "Image upload failed. Please try again.",
+        err instanceof Error
+          ? err.message
+          : "Image upload failed. Please try again.",
       );
       setImageFile(null);
       setImagePreview(null);
@@ -422,8 +438,8 @@ export default function Register() {
                 </span>
               </Label>
               <p className="text-xs text-slate-500">
-                Sharing your precise location helps authorities locate the
-                issue faster.
+                Sharing your precise location helps authorities locate the issue
+                faster.
               </p>
 
               <Button
@@ -446,7 +462,8 @@ export default function Register() {
 
               {location && (
                 <p className="text-xs text-slate-500 font-mono">
-                  {location.latitude.toFixed(6)}, {location.longitude.toFixed(6)}
+                  {location.latitude.toFixed(6)},{" "}
+                  {location.longitude.toFixed(6)}
                 </p>
               )}
 
@@ -627,7 +644,8 @@ export default function Register() {
                 </>
               ) : isUploading ? (
                 <>
-                  <Loader2 className="h-4 w-4 mr-2 animate-spin" /> Uploading image…
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" /> Uploading
+                  image…
                 </>
               ) : (
                 "Submit Complaint"
